@@ -67,7 +67,9 @@ pip install markdown
 pip install pika
 ```
 
-## Executando migrações
+## Migrações
+
+### Executando migrações
 
 Executar seguinte comando (Ambiente virtual):
 
@@ -75,7 +77,7 @@ Executar seguinte comando (Ambiente virtual):
 python manage.py makemigrate
 ```
 
-## Rodando migrações existentes
+### Rodando migrações existentes
 
 Executar seguinte comando (Ambiente virtual):
 
@@ -95,7 +97,7 @@ python manage.py createsuperuser
 - Executar seguinte comando
 
 ```bash
-python manage.py makemigrations
+python manage.py runserver
 ```
 
 ## Referências
