@@ -5,13 +5,13 @@ Documentação e passo a passo do projeto
 
 ### Gerando ambiente virtual
 
-- 1º Na pasta raíz criar ambiente Virtual
+- Na pasta raíz criar ambiente Virtual
 
 ```bash
 python3 -m venv ./venv
 ```
 
-- 2º Pegar o caminho do projeto
+- Pegar o caminho do projeto
 
 ```bash
 pwd
@@ -19,13 +19,13 @@ pwd
 
 (O resultado será o caminho local até o projeto)
 
-- 3º  Na pasta raiz executar o ambiente virtual executando o seguinte comando com as informações obtidas no passo anterior
+- Na pasta raiz executar o ambiente virtual executando o seguinte comando com as informações obtidas no passo anterior
 
 ```bash
 source {caminho/de/exemplo/anterior}/venv/bin/activate
 ```
 
-- 4º Após a execução desses comandos você estará dentro do ambiente virtual
+- Após a execução desses comandos você estará dentro do ambiente virtual
 
 *Exemplo:*
 
@@ -74,7 +74,6 @@ Executar seguinte comando (Ambiente virtual):
 ```bash
 python manage.py runserver
 ```
-
 
 ## Subindo Servidor
 
