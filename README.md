@@ -41,7 +41,7 @@ source {caminho/de/exemplo/anterior}/venv/bin/activate
 pip install python
 ```
 
-**(Após a instação apertar CTRL+SHIFT+P e buscar por `select interpreter` e selecionar o interpretador do ambiente virtual)**
+**(Após a instalação apertar CTRL+SHIFT+P e buscar por `select interpreter` e selecionar o interpretador do ambiente virtual)**
 
 - Django
 
