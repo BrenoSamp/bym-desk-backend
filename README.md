@@ -74,7 +74,7 @@ pip install pika
 Executar seguinte comando (Ambiente virtual):
 
 ```bash
-python manage.py makemigrate
+python manage.py makemigrations
 ```
 
 ### Rodando migrações existentes
