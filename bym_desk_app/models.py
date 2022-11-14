@@ -12,7 +12,7 @@ class Usuario(models.Model):
 class Analista(models.Model):
     setor = models.CharField(max_length=100, null=False)
     matricula = models.CharField(max_length=100, null=False, unique=True)
-    usuario_id = models.ForeignKey('Usuario', on_delete=models.CASCADE)
+    usuario_id = models.ForeignKey('Usuario', on_delete=models.CASCADE, unique=True)
 
     def __str__(self):
         return self.matricula
