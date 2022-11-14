@@ -1,10 +1,6 @@
-# BYM-DESK-BACKEND DOCUMENTATION
+# Documentação
 
-## Depêndencias Locais
-
-- Python3
-
-
+Documentação e passo a passo do projeto
 ## Depêndencias a serem instaladas com o venv (Tutorial)
 
 ### Gerando ambiente virtual
@@ -29,7 +25,7 @@ pwd
 source {caminho/de/exemplo/anterior}/venv/bin/activate
 ```
 
-- 4º Após a execução desses comandos vocÊ estará dentro do ambiente virtual
+- 4º Após a execução desses comandos você estará dentro do ambiente virtual
 
 *Exemplo:*
 
@@ -39,16 +35,30 @@ source {caminho/de/exemplo/anterior}/venv/bin/activate
 
 ### Instalando dependêndencias dentro do ambiente virtual
 
+- Python
+
+```bash
+pip install python
+```
+
+(Após isso apertar CTRL+SHIFT+P e buscar por `select interpreter` e selecionar o interpretador do ambiente virtual)
+
 - Django
 
-```
+```bash
 pip install django
 ```
 
 - Django Rest Framework
 
-```
+```bash
 pip install djangorestframework
+```
+
+- Markdown
+
+```bash
+pip install markdown
 ```
 
 - Pika
@@ -57,14 +67,26 @@ pip install djangorestframework
 pip install pika
 ```
 
+## Executando migrações
+
+Executar seguinte comando (Ambiente virtual):
+
+```bash
+python manage.py runserver
+```
+
 
 ## Subindo Servidor
 
 - Executar seguinte comando
 
-```
-python3 manage.py runserver
+```bash
+python manage.py makemigrations
 ```
 
+## Referências
+
+https://www.djangoproject.com/
+https://www.django-rest-framework.org/
 
 

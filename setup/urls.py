@@ -18,5 +18,5 @@ from django.urls import path
 from bym_desk_app.views import createUser
 
 urlpatterns = [
-    path('create/', createUser),
+    path('user/create/', createUser),
 ]
