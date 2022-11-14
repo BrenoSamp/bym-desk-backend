@@ -72,7 +72,15 @@ pip install pika
 Executar seguinte comando (Ambiente virtual):
 
 ```bash
-python manage.py runserver
+python manage.py makemigrate
+```
+
+## Rodando migrações existentes
+
+Executar seguinte comando (Ambiente virtual):
+
+```bash
+python manage.py migrate
 ```
 
 ## Criando super usuário para django admin
