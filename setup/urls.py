@@ -19,4 +19,5 @@ from bym_desk_app.views import createUser
 
 urlpatterns = [
     path('user/create/', createUser),
+    path('admin/', admin.site.urls)
 ]

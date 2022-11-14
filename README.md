@@ -8,7 +8,7 @@ Documentação e passo a passo do projeto
 - Na pasta raíz criar ambiente Virtual
 
 ```bash
-python3 -m venv ./venv
+python -m venv ./venv
 ```
 
 - Pegar o caminho do projeto
@@ -75,6 +75,13 @@ Executar seguinte comando (Ambiente virtual):
 python manage.py runserver
 ```
 
+## Criando super usuário para django admin
+
+Executar comando para criar novo usuário:
+
+```bash
+python manage.py createsuperuser
+```
 ## Subindo Servidor
 
 - Executar seguinte comando
@@ -87,5 +94,6 @@ python manage.py makemigrations
 
 - https://www.djangoproject.com/
 - https://www.django-rest-framework.org/
+- https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django
 
 
