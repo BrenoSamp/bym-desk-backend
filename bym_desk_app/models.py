@@ -16,3 +16,14 @@ class Analista(models.Model):
 
     def __str__(self):
         return self.matricula
+
+class Ticket(models.Model):
+    bloco = models.CharField(max_length=100, null=False)
+    local = models.CharField(max_length=100, null=False)
+    tipo = models.CharField(max_length=100, null=False)
+    data = models.CharField(max_length=100, null=False)
+    solicitante_id = models.ForeignKey('Usuario', on_delete=models.CASCADE)
+    analista_id = models.ForeignKey('Analista', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.matricula
