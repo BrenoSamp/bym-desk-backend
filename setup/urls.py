@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from bym_desk_app.views import createUser, UsuariosViewSet, AnalistasViewSet, TicketsViewSet, ListaTicketsUsuarioViewSet, ListaTicketsAnalistaViewSet
+from bym_desk_app.views import UsuariosViewSet, AnalistasViewSet, TicketsViewSet, ListaTicketsUsuarioViewSet, ListaTicketsAnalistaViewSet, createAnalista
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -25,9 +25,9 @@ router.register('tickets', TicketsViewSet, basename='Tickets')
 router.register('mensagens', TicketsViewSet, basename='Tickets')
 
 urlpatterns = [
-    path('user/create/', createUser),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('usuarios/<int:solicitante_id>/tickets', ListaTicketsUsuarioViewSet.as_view()),
-    path('analistas/<int:analista_id>/tickets', ListaTicketsUsuarioViewSet.as_view())
+    path('analistas/<int:analista_id>/tickets', ListaTicketsAnalistaViewSet.as_view()),
+    path('usuarios/analista', createAnalista)
 ]

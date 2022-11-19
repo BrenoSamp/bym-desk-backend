@@ -1,8 +1,10 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from rest_framework import viewsets, generics, filters
 from bym_desk_app.models import Usuario, Analista, Ticket
 from bym_desk_app.serializer import UsuarioSerializer, AnalistaSerializer, TicketSerializer, ListaTicketsUsuarioSerializer, ListaTicketsAnalistaSerializer
 from django_filters.rest_framework import DjangoFilterBackend
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 class UsuariosViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
@@ -39,7 +41,40 @@ class ListaTicketsAnalistaViewSet(generics.ListAPIView):
         return queryset
     serializer_class = ListaTicketsAnalistaSerializer
 
-def createUser(request):
+@csrf_exempt
+def createAnalista(request):
     if request.method == 'POST':
-        user = {'id': 1}
-        return JsonResponse(user)
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        usuario = {
+            'nome': body['nome'],
+            'email': body['email'],
+            'senha': body['senha'],
+            'telefone': body['telefone'],
+        }
+        userSerializer = UsuarioSerializer(data=usuario)
+        userSerializer.is_valid(raise_exception=True)
+        userSerializer.save()
+
+        analista = {
+            'matricula': body['matricula'],
+            'setor': body['setor'],
+            'usuario_id': userSerializer.data['id']
+        }
+        analistaSerializer = AnalistaSerializer(data=analista)
+        analistaSerializer.is_valid(raise_exception=True)
+        analistaSerializer.save()
+
+        analistaFormatted = {
+            'id': userSerializer.data['id'],
+            'nome': body['nome'],
+            'email': body['email'],
+            'senha': body['senha'],
+            'telefone': body['telefone'],
+            'analista_id': analistaSerializer.data['id'],
+            'matricula': body['matricula'],
+            'setor': body['setor']
+        }
+
+        return JsonResponse(analistaFormatted)
