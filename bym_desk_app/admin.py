@@ -19,6 +19,7 @@ class Tickets(admin.ModelAdmin):
     list_display = ('id', 'solicitante_id', 'analista_id', 'bloco', 'local', 'tipo', 'data')
     list_display_links = ('id', 'solicitante_id', 'analista_id', 'bloco', 'local', 'tipo', 'data')
     search_fields = ('id', 'solicitante_id', 'analista_id', 'bloco', 'local', 'tipo', 'data')
+    ordering = ('id',)
 
 admin.site.register(Ticket, Tickets)
 
@@ -27,4 +28,5 @@ class Mensagens(admin.ModelAdmin):
     list_display_links = ('id', 'ticket_id', 'mensagem', 'imagem')
     search_fields = ('id', 'ticket_id', 'mensagem', 'imagem')
 
-admin.site.register(Ticket, Mensagens)
+
+admin.site.register(Mensagem, Mensagens)

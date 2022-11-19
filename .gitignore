@@ -1,2 +1,3 @@
 /venv
 .dbdata
+/bym_desk_app/migrations/000*

@@ -22,6 +22,7 @@ router = routers.DefaultRouter()
 router.register('usuarios', UsuariosViewSet, basename='Usuários')
 router.register('analistas', AnalistasViewSet, basename='Analistas')
 router.register('tickets', TicketsViewSet, basename='Tickets')
+router.register('mensagens', TicketsViewSet, basename='Tickets')
 
 urlpatterns = [
     path('user/create/', createUser),

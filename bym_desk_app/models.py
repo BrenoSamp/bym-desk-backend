@@ -26,7 +26,7 @@ class Ticket(models.Model):
     analista_id = models.ForeignKey('Analista', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.matricula
+        return self.tipo
 
 class Mensagem(models.Model):
     mensagem = models.CharField(max_length=255, null=False)
@@ -34,4 +34,4 @@ class Mensagem(models.Model):
     ticket_id = models.ForeignKey('Ticket', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.matricula
+        return self.mensagem
