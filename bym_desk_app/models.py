@@ -27,3 +27,11 @@ class Ticket(models.Model):
 
     def __str__(self):
         return self.matricula
+
+class Mensagem(models.Model):
+    mensagem = models.CharField(max_length=255, null=False)
+    imagem = models.CharField(max_length=100, null=False)
+    ticket_id = models.ForeignKey('Ticket', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.matricula
