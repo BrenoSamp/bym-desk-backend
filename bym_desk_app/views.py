@@ -1,7 +1,7 @@
 from django.http import JsonResponse, HttpResponse
 from rest_framework import viewsets, generics, filters
-from bym_desk_app.models import Usuario, Analista, Ticket
-from bym_desk_app.serializer import UsuarioSerializer, AnalistaSerializer, TicketSerializer, ListaTicketsUsuarioSerializer, ListaTicketsAnalistaSerializer
+from bym_desk_app.models import Usuario, Analista, Ticket, Mensagem
+from bym_desk_app.serializer import UsuarioSerializer, AnalistaSerializer, TicketSerializer, ListaTicketsUsuarioSerializer, ListaTicketsAnalistaSerializer, MensagemSerializer, ListaMensagensTicketSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -37,7 +37,7 @@ class ListaTicketsUsuarioViewSet(generics.ListAPIView):
 
 class ListaTicketsAnalistaViewSet(generics.ListAPIView):
     def get_queryset(self):
-        queryset = Ticket.objects.filter(solicitante_id=self.kwargs['analista_id'])
+        queryset = Ticket.objects.filter(analista_id=self.kwargs['analista_id'])
         return queryset
     serializer_class = ListaTicketsAnalistaSerializer
 
@@ -78,3 +78,16 @@ def createAnalista(request):
         }
 
         return JsonResponse(analistaFormatted)
+
+class MensagensViewSet(viewsets.ModelViewSet):
+    queryset = Mensagem.objects.all()
+    serializer_class = MensagemSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    ordering_fields = ['id']
+    filterset_fields = ['id', 'ticket_id', 'mensagem', 'imagem']
+
+class ListaMensagensTicketViewSet(generics.ListAPIView):
+    def get_queryset(self):
+        queryset = Ticket.objects.filter(ticket_id=self.kwargs['ticket_id'])
+        return queryset
+    serializer_class= ListaMensagensTicketSerializer

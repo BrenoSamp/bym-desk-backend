@@ -15,19 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from bym_desk_app.views import UsuariosViewSet, AnalistasViewSet, TicketsViewSet, ListaTicketsUsuarioViewSet, ListaTicketsAnalistaViewSet, createAnalista
+from bym_desk_app.views import UsuariosViewSet, AnalistasViewSet, TicketsViewSet, ListaTicketsUsuarioViewSet, ListaTicketsAnalistaViewSet, createAnalista, MensagensViewSet, ListaMensagensTicketViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register('usuarios', UsuariosViewSet, basename='Usuários')
 router.register('analistas', AnalistasViewSet, basename='Analistas')
 router.register('tickets', TicketsViewSet, basename='Tickets')
-router.register('mensagens', TicketsViewSet, basename='Tickets')
+router.register('mensagens', MensagensViewSet, basename='Mensagens')
 
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('usuarios/<int:solicitante_id>/tickets', ListaTicketsUsuarioViewSet.as_view()),
     path('analistas/<int:analista_id>/tickets', ListaTicketsAnalistaViewSet.as_view()),
-    path('usuarios/analista', createAnalista)
+    path('usuarios/analista', createAnalista),
+    path('usuarios/<int:ticket_id>/mensagens', ListaMensagensTicketViewSet.as_view()),
 ]

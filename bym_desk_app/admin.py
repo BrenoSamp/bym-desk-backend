@@ -27,6 +27,6 @@ class Mensagens(admin.ModelAdmin):
     list_display = ('id', 'ticket_id', 'mensagem', 'imagem')
     list_display_links = ('id', 'ticket_id', 'mensagem', 'imagem')
     search_fields = ('id', 'ticket_id', 'mensagem', 'imagem')
-
+    ordering = ('id',)
 
 admin.site.register(Mensagem, Mensagens)
