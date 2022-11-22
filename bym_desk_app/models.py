@@ -5,6 +5,7 @@ class Usuario(models.Model):
     email = models.CharField(max_length=100, null=False, unique=True)
     senha = models.CharField(max_length=100, null=False)
     telefone = models.CharField(max_length=100, null=False)
+    role = models.CharField(max_length=100, null=False)
 
     def __str__(self):
         return self.nome
@@ -17,13 +18,26 @@ class Analista(models.Model):
     def __str__(self):
         return self.matricula
 
+class Bloco(models.Model):
+    nome = models.CharField(max_length=100, null=False)
+
+    def __str__(self):
+        return self.nome
+
+class Local(models.Model):
+    nome = models.CharField(max_length=100, null=False)
+    bloco_id = models.ForeignKey('Bloco', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.nome
+
 class Ticket(models.Model):
-    bloco = models.CharField(max_length=100, null=False)
-    local = models.CharField(max_length=100, null=False)
     tipo = models.CharField(max_length=100, null=False)
     data = models.CharField(max_length=100, null=False)
+    status = models.CharField(max_length=100, null=False)
     solicitante_id = models.ForeignKey('Usuario', on_delete=models.CASCADE)
     analista_id = models.ForeignKey('Analista', on_delete=models.CASCADE)
+    local_id = models.ForeignKey('Local', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.tipo
