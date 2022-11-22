@@ -1,5 +1,5 @@
 from django.contrib import admin
-from bym_desk_app.models import Usuario, Analista, Ticket, Mensagem, Bloco, Local
+from bym_desk_app.models import Usuario, Analista, Ticket, Mensagem, Bloco, Local, Matricula
 
 class Usuarios(admin.ModelAdmin):
     list_display = ('id', 'nome', 'email', 'senha', 'telefone', 'role')
@@ -18,12 +18,20 @@ class Analistas(admin.ModelAdmin):
 admin.site.register(Analista, Analistas)
 
 class Tickets(admin.ModelAdmin):
-    list_display = ('id', 'solicitante_id', 'analista_id', 'local_id', 'tipo', 'data')
-    list_display_links = ('id', 'solicitante_id', 'analista_id', 'local_id', 'tipo', 'data')
+    list_display = ('id', 'solicitante_id', 'analista_id', 'local_id', 'tipo', 'data', 'status')
+    list_display_links = ('id', 'solicitante_id', 'analista_id', 'local_id', 'tipo', 'data', 'status')
     search_fields = ('id', 'solicitante_id', 'analista_id', 'local_id', 'tipo', 'data', 'status')
     ordering = ('id',)
 
 admin.site.register(Ticket, Tickets)
+
+class Matriculas(admin.ModelAdmin):
+    list_display = ('id', 'matricula')
+    list_display_links = ('id', 'matricula')
+    search_fields = ('id', 'matricula')
+    ordering = ('id',)
+
+admin.site.register(Matricula, Matriculas)
 
 class Mensagens(admin.ModelAdmin):
     list_display = ('id', 'ticket_id', 'mensagem', 'imagem')

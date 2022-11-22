@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from bym_desk_app.models import Usuario, Analista, Ticket, Mensagem, Bloco, Local
+from bym_desk_app.models import Usuario, Analista, Ticket, Mensagem, Bloco, Local, Matricula
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,6 +34,11 @@ class BlocoSerializer(serializers.ModelSerializer):
 class LocalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Local
+        fields = '__all__'
+
+class MatriculaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Matricula
         fields = '__all__'
 
 class MensagemSerializer(serializers.ModelSerializer):

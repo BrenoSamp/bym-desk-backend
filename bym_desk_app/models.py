@@ -6,6 +6,7 @@ class Usuario(models.Model):
     senha = models.CharField(max_length=100, null=False)
     telefone = models.CharField(max_length=100, null=False)
     role = models.CharField(max_length=100, null=False)
+    admin = models.BooleanField(null=True)
 
     def __str__(self):
         return self.nome
@@ -41,6 +42,9 @@ class Ticket(models.Model):
 
     def __str__(self):
         return self.tipo
+
+class Matricula(models.Model):
+    matricula = models.CharField(max_length=100, null=False, unique=True)
 
 class Mensagem(models.Model):
     mensagem = models.CharField(max_length=255, null=False)

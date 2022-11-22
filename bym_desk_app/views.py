@@ -1,10 +1,10 @@
 from django.http import JsonResponse, HttpResponse
 from rest_framework import viewsets, generics, filters
-from bym_desk_app.models import Usuario, Analista, Ticket, Mensagem, Bloco, Local
-from bym_desk_app.serializer import UsuarioSerializer, AnalistaSerializer, TicketSerializer, ListaTicketsUsuarioSerializer, ListaTicketsAnalistaSerializer, MensagemSerializer, ListaMensagensTicketSerializer, BlocoSerializer, LocalSerializer
+from bym_desk_app.models import Usuario, Analista, Ticket, Mensagem, Bloco, Local, Matricula
+from bym_desk_app.serializer import UsuarioSerializer, AnalistaSerializer, TicketSerializer, ListaTicketsUsuarioSerializer, MensagemSerializer, ListaMensagensTicketSerializer, BlocoSerializer, LocalSerializer, MatriculaSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django.views.decorators.csrf import csrf_exempt
-from django.core import serializers
+from django.db.models import Q
 import json
 
 class UsuariosViewSet(viewsets.ModelViewSet):
@@ -43,24 +43,33 @@ class LocaisViewSet(viewsets.ModelViewSet):
     ordering_fields = ['id']
     filterset_fields = ['id', 'nome', 'bloco_id']
 
+class MatriculasViewSet(viewsets.ModelViewSet):
+    queryset = Matricula.objects.all()
+    serializer_class = MatriculaSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    ordering_fields = ['id']
+    filterset_fields = ['id', 'matricula']
+
 class ListaTicketsUsuarioViewSet(generics.ListAPIView):
     def get_queryset(self):
         queryset = Ticket.objects.filter(solicitante_id=self.kwargs['solicitante_id'])
         return queryset
     serializer_class= ListaTicketsUsuarioSerializer
 
-
-class ListaTicketsAnalistaViewSet(generics.ListAPIView):
-    def get_queryset(self):
-        queryset = Ticket.objects.filter(analista_id=self.kwargs['analista_id'])
-        return queryset
-    serializer_class = ListaTicketsAnalistaSerializer
-
 @csrf_exempt
 def createAnalista(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
+
+        matricula = Matricula.objects.filter(matricula=body['matricula'])
+
+        if matricula.exists() == False:
+            error = {
+                'error': 'Matricula não existe'
+            }
+
+            return JsonResponse(error)
 
         usuario = {
             'nome': body['nome'],
@@ -146,57 +155,86 @@ def login(request):
                 'error': 'E-mail ou senha incorreta'
             })
 
+def listTicketsSolicitante(request):
+    if request.method == 'GET':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        usuarioFiltered = Usuario.objects.filter(id=body['usuario_id'])
+
+        if usuarioFiltered.exists() == False:
+            error = {
+                'error': 'Solicitante não existe'
+            }
+
+            return JsonResponse(error)
+
+        usuario = Usuario.objects.get(id=body['usuario_id'])
+
+        q = Q()
+
+        if body['id']:
+            q &= Q(id=body['id'])
+        q &= Q(solicitante_id=usuario.id)
+        ticket = Ticket.objects.get(q)
+        local = Local.objects.get(local_id=ticket.local_id)
+        bloco = Bloco.objects.get(id=local.bloco_id)
+
+        formattedResult = {
+            'id': ticket.id,
+            'solicitante_id': ticket.solicitante_id,
+            'analista_id': ticket.analista_id,
+            'local_id': ticket.local_id,
+            'nome_local': local.nome,
+            'bloco_id: ': local.bloco_id,
+            'nome_bloco': bloco.nome,
+            'status': ticket.status,
+            'tipo': ticket.tipo,
+            'data': ticket.data
+        }
+
+        return JsonResponse(formattedResult)
 
 
+def listTicketsAnalista(request):
+    if request.method == 'GET':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
 
+        analista = Analista.objects.filter(id=body['analista_id'])
 
-# def listTicketsFiltradosAnalista(request):
-#     if request.method == 'GET':
-#         body_unicode = request.body.decode('utf-8')
-#         body = json.loads(body_unicode)
+        q = Q()
 
-#         if body['id']:
-#             query = {
-#                 'analista_id': self.kwargs['analista_id'],
-#                 'id' =>
+        if analista.exists():
+            analista = Analista.objects.get(id=body['analista_id'])
+            if body['id']:
+                q &= Q(id=body['id'])
+            if body['status']:
+                q &= Q(status=body['status'])
+            ticket = Ticket.objects.get(q)
+            local = Local.objects.get(local_id=ticket.local_id)
+            bloco = Bloco.objects.get(id=local.bloco_id)
 
-#             }
-#             ticket = Ticket.objects.filter(query)
-#             local = Local.objects.filter(local_id = ticket['local_id'])
-#             bloco =
+            formattedResult = {
+                'id': ticket.id,
+                'solicitante_id': ticket.solicitante_id,
+                'analista_id': ticket.analista_id,
+                'local_id': ticket.local_id,
+                'nome_local': local.nome,
+                'bloco_id: ': local.bloco_id,
+                'nome_bloco': bloco.nome,
+                'status': ticket.status,
+                'tipo': ticket.tipo,
+                'data': ticket.data
+            }
 
+            return JsonResponse(formattedResult)
 
-#         usuario = {
-#             'nome': body['nome'],
-#             'email': body['email'],
-#             'senha': body['senha'],
-#             'telefone': body['telefone'],
-#         }
-#         userSerializer = UsuarioSerializer(data=usuario)
-#         userSerializer.is_valid(raise_exception=True)
-#         userSerializer.save()
+        error = {
+            'error': 'Analista não existe'
+        }
 
-#         analista = {
-#             'matricula': body['matricula'],
-#             'setor': body['setor'],
-#             'usuario_id': userSerializer.data['id']
-#         }
-#         analistaSerializer = AnalistaSerializer(data=analista)
-#         analistaSerializer.is_valid(raise_exception=True)
-#         analistaSerializer.save()
-
-#         analistaFormatted = {
-#             'id': userSerializer.data['id'],
-#             'nome': body['nome'],
-#             'email': body['email'],
-#             'senha': body['senha'],
-#             'telefone': body['telefone'],
-#             'analista_id': analistaSerializer.data['id'],
-#             'matricula': body['matricula'],
-#             'setor': body['setor']
-#         }
-
-#         return JsonResponse(analistaFormatted)
+        return JsonResponse(error)
 
 class MensagensViewSet(viewsets.ModelViewSet):
     queryset = Mensagem.objects.all()

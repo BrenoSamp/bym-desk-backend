@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from bym_desk_app.views import UsuariosViewSet, AnalistasViewSet, TicketsViewSet, ListaTicketsUsuarioViewSet, ListaTicketsAnalistaViewSet, createAnalista, MensagensViewSet, ListaMensagensTicketViewSet, BlocosViewSet, LocaisViewSet, login, createUser
+from bym_desk_app.views import UsuariosViewSet, AnalistasViewSet, TicketsViewSet, ListaTicketsUsuarioViewSet, createAnalista, MensagensViewSet, ListaMensagensTicketViewSet, BlocosViewSet, LocaisViewSet, login, createUser, listTicketsAnalista, listTicketsSolicitante, MatriculasViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -25,14 +25,15 @@ router.register('tickets', TicketsViewSet, basename='Tickets')
 router.register('mensagens', MensagensViewSet, basename='Mensagens')
 router.register('blocos', BlocosViewSet, basename='Blocos')
 router.register('locais', LocaisViewSet, basename='Locais')
+router.register('matriculas', MatriculasViewSet, basename='Matriculas')
 
 urlpatterns = [
     path('', include(router.urls)),
     path('login', login),
     path('admin/', admin.site.urls),
-    path('usuarios/<int:solicitante_id>/tickets', ListaTicketsUsuarioViewSet.as_view()),
-    path('analistas/<int:analista_id>/tickets', ListaTicketsAnalistaViewSet.as_view()),
-    path('usuarios/analista', createAnalista),
-    path('usuarios/create', createUser),
-    path('usuarios/<int:ticket_id>/mensagens', ListaMensagensTicketViewSet.as_view()),
+    path('analista/tickets', listTicketsAnalista),
+    path('analista/create', createAnalista),
+    path('solicitante/tickets', listTicketsSolicitante),
+    path('solicitante/create', createUser),
+    path('solicitante/<int:ticket_id>/mensagens', ListaMensagensTicketViewSet.as_view()),
 ]
