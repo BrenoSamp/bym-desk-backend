@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from bym_desk_app.views import UsuariosViewSet, AnalistasViewSet, TicketsViewSet, ListaTicketsUsuarioViewSet, createAnalista, MensagensViewSet, ListaMensagensTicketViewSet, BlocosViewSet, LocaisViewSet, login, createUser, listTicketsAnalista, listTicketsSolicitante, MatriculasViewSet, createTicket
+from bym_desk_app.views import UsuariosViewSet, AnalistasViewSet, TicketsViewSet, ListaTicketsUsuarioViewSet, createAnalista, MensagensViewSet, ListaMensagensTicketViewSet, BlocosViewSet, LocaisViewSet, login, createUser, listTicketsAnalista, listTicketsSolicitante, MatriculasViewSet, createTicket, getBlocoLocal
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -36,5 +36,6 @@ urlpatterns = [
     path('solicitante/tickets', listTicketsSolicitante),
     path('solicitante/create', createUser),
     path('solicitante/criarTicket', createTicket),
+    path('solicitante/criarTicket', getBlocoLocal),
     path('solicitante/<int:ticket_id>/mensagens', ListaMensagensTicketViewSet.as_view()),
 ]

@@ -37,7 +37,7 @@ class Ticket(models.Model):
     data = models.CharField(max_length=100, null=False)
     status = models.CharField(max_length=100, null=False)
     solicitante_id = models.ForeignKey('Usuario', on_delete=models.CASCADE)
-    analista_id = models.ForeignKey('Analista', on_delete=models.CASCADE)
+    analista_id = models.ForeignKey('Analista', on_delete=models.CASCADE, null=True)
     local_id = models.ForeignKey('Local', on_delete=models.CASCADE)
 
     def __str__(self):
@@ -48,7 +48,7 @@ class Matricula(models.Model):
 
 class Mensagem(models.Model):
     mensagem = models.CharField(max_length=255, null=False)
-    imagem = models.CharField(max_length=100, null=False)
+    imagem = models.CharField(max_length=100, null=True)
     ticket_id = models.ForeignKey('Ticket', on_delete=models.CASCADE)
 
     def __str__(self):

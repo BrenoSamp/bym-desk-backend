@@ -264,16 +264,11 @@ def createTicket(request):
         body = json.loads(body_unicode)
         current_date = datetime.date.today()
 
-        analista = Analista.objects.filter(setor=body['tipo'])
-        bloco = Bloco.objects.filter(setor=body['bloco'])
-        local = Local.objects.filter(bloco_id=bloco['id'], nome=body['local'])
-
         ticket = {
-            'solicitante': body['solicitante_id'],
-            'analista': analista['id'],
+            'solicitante_id': body['solicitante_id'],
             'tipo': body['tipo'],
-            'local': local['id'],
-            'status': 'em aberto',
+            'local_id': body['local'],
+            'status': 'em espera',
             'data': current_date
         }
 
@@ -283,12 +278,27 @@ def createTicket(request):
 
         ticketFormatted = {
             'id': ticketSerializer.data['id'],
-            'solicitante': body['solicitante_id'],
-            'analista': analista['id'],
+            'solicitante_id': body['solicitante_id'],
             'tipo': body['tipo'],
-            'local': local['id'],
-            'status': 'em aberto',
+            'local_id': body['local'],
+            'status': 'em espera',
             'data': current_date
         }
 
+        mensagem = {
+            'ticket_id': ticketFormatted['id'],
+            'mensagem': body['descricao']
+        }
+
+        mensagemSerializer = MensagemSerializer(data=mensagem)
+        mensagemSerializer.is_valid(raise_exception=True)
+        mensagemSerializer.save()
+
+        publish({'nome': 'Matheus Henriques', 'email': 'math.marqui@gmail.com', 'setor':'Elétrico'})
+
         return JsonResponse(ticketFormatted)
+
+def getBlocoLocal(request):
+    if request.method == 'GET':
+        locais_bloco = Local.objects.select_related('local', 'bloco')
+        return locais_bloco
