@@ -1,3 +1,4 @@
+import datetime
 from django.http import JsonResponse, HttpResponse
 from rest_framework import viewsets, generics, filters
 from bym_desk_app.models import Usuario, Analista, Ticket, Mensagem, Bloco, Local, Matricula
@@ -256,3 +257,38 @@ class ListaMensagensTicketViewSet(generics.ListAPIView):
         queryset = Ticket.objects.filter(ticket_id=self.kwargs['ticket_id'])
         return queryset
     serializer_class= ListaMensagensTicketSerializer
+
+def createTicket(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        current_date = datetime.date.today()
+
+        analista = Analista.objects.filter(setor=body['tipo'])
+        bloco = Bloco.objects.filter(setor=body['bloco'])
+        local = Local.objects.filter(bloco_id=bloco['id'], nome=body['local'])
+
+        ticket = {
+            'solicitante': body['solicitante_id'],
+            'analista': analista['id'],
+            'tipo': body['tipo'],
+            'local': local['id'],
+            'status': 'em aberto',
+            'data': current_date
+        }
+
+        ticketSerializer = TicketSerializer(data=ticket)
+        ticketSerializer.is_valid(raise_exception=True)
+        ticketSerializer.save()
+
+        ticketFormatted = {
+            'id': ticketSerializer.data['id'],
+            'solicitante': body['solicitante_id'],
+            'analista': analista['id'],
+            'tipo': body['tipo'],
+            'local': local['id'],
+            'status': 'em aberto',
+            'data': current_date
+        }
+
+        return JsonResponse(ticketFormatted)
