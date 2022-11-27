@@ -1,21 +1,51 @@
 # Documentação
 
 Documentação e passo a passo do projeto
-## Depêndencias a serem instaladas com o venv
+## Depêndencias a serem instaladas
 
-### Gerando ambiente virtual
+- [Python ^3.0](https://www.python.org/downloads/)
+- [Docker](https://docs.docker.com/engine/install/)
+- [Docker-Compose](https://docs.docker.com/compose/install/)
 
-- Na pasta raíz criar ambiente Virtual
+## Iniciando aplicação
 
-```bash
-python -m venv ./venv
-```
-
-- Pegar o caminho do projeto
+- Inicializar os containers executando o comando:
 
 ```bash
-pwd
+docker-compose up --build
 ```
+
+## Acessando container da aplicação
+
+- Para acessar o container da aplicaçao e executar os comandos python executar seguinte comando:
+
+```bash
+docker exec -it bym_backend sh
+```
+
+- Para acessar o container do banco e executar os comandos sql executar seguinte comando:
+
+```bash
+docker exec -it bym_db sh -c "mysql -u root -p'root' bym"
+```
+
+## Executando Migrações
+
+- No container `bym_backend` executar os seguintes comandos
+
+```bash
+python3 /app/manage.py makemigrations
+python3 /app/manage.py migrate
+```
+
+## Criando super usuário para django admin
+
+Executar comando para criar novo usuário:
+
+```bash
+python3 /app/manage.py createsuperuser
+```
+
 
 **(O resultado será o caminho local até o projeto)**
 
