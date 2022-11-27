@@ -1,11 +1,11 @@
 import pika, json
 
-params = pika.URLParameters('amqps://czqxwpup:tBLB3TcxbjxUp7-sbk63mrzLqROKS4Xf@albatross.rmq.cloudamqp.com/czqxwpup')
+params = pika.URLParameters('amqps://cuvxizzy:aFGKx1-N9z43KdNq3gHJiaDGsflN2dO1@albatross.rmq.cloudamqp.com/cuvxizzy')
 
-connection = pika.BlockingConnection(params)
 
-channel = connection.channel()
+def publish(body):
+    connection = pika.BlockingConnection(params)
+    channel = connection.channel()
+    channel.basic_publish(exchange='', routing_key='novo_ticket_setor', body=json.dumps(body))
+    connection.close()
 
-def publish(method, body):
-    properties = pika.BasicProperties(method)
-    channel.basic_publish(exchange='', routing_key='create_ticket', body=json.dumps(body), properties=properties)

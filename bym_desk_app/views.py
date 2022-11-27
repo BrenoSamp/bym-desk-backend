@@ -7,6 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 import json
+from bym_desk_app.producer import publish
 
 class UsuariosViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
@@ -195,6 +196,13 @@ def listTicketsSolicitante(request):
         }
 
         return JsonResponse(formattedResult)
+
+@csrf_exempt
+def criaTicket(request):
+    if request.method == 'POST':
+        publish({'nome': 'Breno', 'email': 'bsampaio8@hotmail.com', 'setor':'Frigorifico'})
+    return JsonResponse({})
+
 
 
 def listTicketsAnalista(request):
