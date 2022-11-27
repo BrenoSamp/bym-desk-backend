@@ -1,3 +1,5 @@
 /venv
 .dbdata
 /bym_desk_app/migrations/000*
+/setup/__pycache__
+/bym_desk_app/__pycache__
