@@ -287,6 +287,7 @@ def createTicket(request):
 
         mensagem = {
             'ticket_id': ticketFormatted['id'],
+            'imagem':body['imagem'],
             'mensagem': body['descricao']
         }
 

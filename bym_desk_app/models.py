@@ -48,7 +48,7 @@ class Matricula(models.Model):
 
 class Mensagem(models.Model):
     mensagem = models.CharField(max_length=255, null=False)
-    imagem = models.CharField(max_length=100, null=True)
+    imagem = models.ImageField(null=True)
     ticket_id = models.ForeignKey('Ticket', on_delete=models.CASCADE)
 
     def __str__(self):
