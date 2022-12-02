@@ -301,5 +301,17 @@ def createTicket(request):
 
 def getBlocoLocal(request):
     if request.method == 'GET':
-        locais_bloco = Local.objects.select_related('local', 'bloco')
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        bloco = Bloco.objects.filter(id=body['bloco_id'])
+        
+        if bloco.exists()==False:
+            error = {
+                'error': 'Solicitante não existe'
+            }
+
+            return JsonResponse(error)
+        
+        locais_bloco = Local.objects.get(bloco_id=body['bloco_id']).values_list('nome', flat=True)
         return locais_bloco
