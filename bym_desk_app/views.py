@@ -288,7 +288,8 @@ def createTicket(request):
         mensagem = {
             'ticket_id': ticketFormatted['id'],
             'imagem':body['imagem'],
-            'mensagem': body['descricao']
+            'mensagem': body['descricao'],
+            'usuario_id': body['solicitante_id']
         }
 
         mensagemSerializer = MensagemSerializer(data=mensagem)
@@ -314,4 +315,60 @@ def getBlocoLocal(request):
             return JsonResponse(error)
         
         locais_bloco = Local.objects.get(bloco_id=body['bloco_id']).values_list('nome', flat=True)
-        return locais_bloco
+        return JsonResponse(locais_bloco)
+
+# def getMensagensTicket(request, idTicket):
+#     if request.method == 'GET':
+        # body_unicode = request.body.decode('utf-8')
+        # body = json.loads(body_unicode)
+
+        # ticket = Ticket.objects.filter(id=idTicket)
+
+        # if ticket.exists()==False:
+        #     error = {
+        #         'error': 'Solicitante não existe'
+        #     }
+
+        #     return JsonResponse(error)
+        
+        # ticket = Mensagem.objects.get(ticket_id=idTicket)
+
+                
+        # ticket = {
+
+        # }
+
+def createMessage(request, idTicket):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        ticket = Ticket.objects.filter(id=idTicket)
+
+        if ticket.exists()==False:
+            error = {
+                'error': 'Solicitante não existe'
+            }
+
+            return JsonResponse(error)
+        
+        message = {
+            'mensagem': body['mensagem'],
+            'imagem': body['imagem'],
+            'ticket_id': idTicket,
+            'usuario_id': body['usuario_id'],
+        }
+
+        mensagemSerializer = MensagemSerializer(data=message)
+        mensagemSerializer.is_valid(raise_exception=True)
+        mensagemSerializer.save()
+
+        messageFormatted = {
+            'id': mensagemSerializer['id'],
+            'mensagem': body['mensagem'],
+            'imagem': body['imagem'],
+            'ticket_id': idTicket,
+            'usuario_id': body['usuario_id'],
+        }
+
+        return JsonResponse(messageFormatted)
