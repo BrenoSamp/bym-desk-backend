@@ -6,6 +6,7 @@ from bym_desk_app.serializer import UsuarioSerializer, AnalistaSerializer, Ticke
 from django_filters.rest_framework import DjangoFilterBackend
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
+from collections import defaultdict
 import json
 from bym_desk_app.producer import publish
 
@@ -314,29 +315,33 @@ def getBlocoLocal(request):
 
             return JsonResponse(error)
         
-        locais_bloco = Local.objects.get(bloco_id=body['bloco_id']).values_list('nome', flat=True)
+        locais_bloco = Local.objects.filter(bloco_id=body['bloco_id']).values_list('nome', flat=True)
         return JsonResponse(locais_bloco)
 
-# def getMensagensTicket(request, idTicket):
-#     if request.method == 'GET':
-        # body_unicode = request.body.decode('utf-8')
-        # body = json.loads(body_unicode)
+def getMensagensTicket(request, idTicket):
+    if request.method == 'GET':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
 
-        # ticket = Ticket.objects.filter(id=idTicket)
+        ticket = Ticket.objects.filter(id=idTicket)
 
-        # if ticket.exists()==False:
-        #     error = {
-        #         'error': 'Solicitante não existe'
-        #     }
+        if ticket.exists()==False:
+            error = {
+                'error': 'Solicitante não existe'
+            }
 
-        #     return JsonResponse(error)
+            return JsonResponse(error)
         
-        # ticket = Mensagem.objects.get(ticket_id=idTicket)
+        mensagensTicket = Mensagem.objects.get(ticket_id=idTicket)
 
+        for mensagem in mensagensTicket:
+            usuarioRemetente = mensagem['usuario_id']
+            nomeUsuario = Usuario.objects.filter(id=usuarioRemetente).values('nome')
+
+            mensagem['usuario_id'].append()
+            mensagem['usuario'] = nomeUsuario
                 
-        # ticket = {
-
-        # }
+        return JsonResponse(mensagensTicket)
 
 def createMessage(request, idTicket):
     if request.method == 'POST':
