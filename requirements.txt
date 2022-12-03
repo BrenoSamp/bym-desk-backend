@@ -6,3 +6,4 @@ django-mysql==3.9
 django-cors-headers==3.5.0
 pika==1.1.0
 django-filter==2.4.0
+pillow==9.3.0

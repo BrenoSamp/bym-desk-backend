@@ -6,6 +6,7 @@ from bym_desk_app.serializer import UsuarioSerializer, AnalistaSerializer, Ticke
 from django_filters.rest_framework import DjangoFilterBackend
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
+from collections import defaultdict
 import json
 from bym_desk_app.producer import publish
 
@@ -197,13 +198,6 @@ def listTicketsSolicitante(request):
 
         return JsonResponse(formattedResult)
 
-@csrf_exempt
-def criaTicket(request):
-    if request.method == 'POST':
-        publish({'nome': 'Breno', 'email': 'bsampaio8@hotmail.com', 'setor':'Frigorifico'})
-    return JsonResponse({})
-
-
 
 def listTicketsAnalista(request):
     if request.method == 'GET':
@@ -264,16 +258,11 @@ def createTicket(request):
         body = json.loads(body_unicode)
         current_date = datetime.date.today()
 
-        analista = Analista.objects.filter(setor=body['tipo'])
-        bloco = Bloco.objects.filter(setor=body['bloco'])
-        local = Local.objects.filter(bloco_id=bloco['id'], nome=body['local'])
-
         ticket = {
-            'solicitante': body['solicitante_id'],
-            'analista': analista['id'],
+            'solicitante_id': body['solicitante_id'],
             'tipo': body['tipo'],
-            'local': local['id'],
-            'status': 'em aberto',
+            'local_id': body['local'],
+            'status': 'em espera',
             'data': current_date
         }
 
@@ -283,12 +272,101 @@ def createTicket(request):
 
         ticketFormatted = {
             'id': ticketSerializer.data['id'],
-            'solicitante': body['solicitante_id'],
-            'analista': analista['id'],
+            'solicitante_id': body['solicitante_id'],
             'tipo': body['tipo'],
-            'local': local['id'],
-            'status': 'em aberto',
+            'local_id': body['local'],
+            'status': 'em espera',
             'data': current_date
         }
 
+        mensagem = {
+            'ticket_id': ticketFormatted['id'],
+            'imagem':body['imagem'],
+            'mensagem': body['descricao'],
+            'usuario_id': body['solicitante_id']
+        }
+
+        mensagemSerializer = MensagemSerializer(data=mensagem)
+        mensagemSerializer.is_valid(raise_exception=True)
+        mensagemSerializer.save()
+
+        publish({'nome': 'Matheus Henriques', 'email': 'math.marqui@gmail.com', 'setor':'Elétrico'})
+
         return JsonResponse(ticketFormatted)
+
+def getBlocoLocal(request):
+    if request.method == 'GET':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        bloco = Bloco.objects.filter(id=body['bloco_id'])
+
+        if bloco.exists()==False:
+            error = {
+                'error': 'Solicitante não existe'
+            }
+
+            return JsonResponse(error)
+
+        locais_bloco = Local.objects.filter(bloco_id=body['bloco_id']).values_list('nome', flat=True)
+        return JsonResponse(locais_bloco)
+
+def getMensagensTicket(request, idTicket):
+    if request.method == 'GET':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        ticket = Ticket.objects.filter(id=idTicket)
+
+        if ticket.exists()==False:
+            error = {
+                'error': 'Solicitante não existe'
+            }
+
+            return JsonResponse(error)
+
+        mensagensTicket = Mensagem.objects.get(ticket_id=idTicket)
+
+        for mensagem in mensagensTicket:
+            usuarioRemetente = mensagem['usuario_id']
+            nomeUsuario = Usuario.objects.filter(id=usuarioRemetente).values('nome')
+
+            mensagem['usuario_id'].append()
+            mensagem['usuario'] = nomeUsuario
+
+        return JsonResponse(mensagensTicket)
+
+def createMessage(request, idTicket):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        ticket = Ticket.objects.filter(id=idTicket)
+
+        if ticket.exists()==False:
+            error = {
+                'error': 'Solicitante não existe'
+            }
+
+            return JsonResponse(error)
+
+        message = {
+            'mensagem': body['mensagem'],
+            'imagem': body['imagem'],
+            'ticket_id': idTicket,
+            'usuario_id': body['usuario_id'],
+        }
+
+        mensagemSerializer = MensagemSerializer(data=message)
+        mensagemSerializer.is_valid(raise_exception=True)
+        mensagemSerializer.save()
+
+        messageFormatted = {
+            'id': mensagemSerializer['id'],
+            'mensagem': body['mensagem'],
+            'imagem': body['imagem'],
+            'ticket_id': idTicket,
+            'usuario_id': body['usuario_id'],
+        }
+
+        return JsonResponse(messageFormatted)
