@@ -300,14 +300,12 @@ def getBlocoLocal(request):
         body = json.loads(body_unicode)
 
         bloco = Bloco.objects.filter(id=body['bloco_id'])
-
         if bloco.exists()==False:
             error = {
                 'error': 'Solicitante não existe'
             }
 
             return JsonResponse(error)
-
         locais_bloco = Local.objects.filter(bloco_id=body['bloco_id']).values_list('nome', flat=True)
         return JsonResponse(locais_bloco)
 
@@ -324,7 +322,6 @@ def getMensagensTicket(request, idTicket):
             }
 
             return JsonResponse(error)
-
         mensagensTicket = Mensagem.objects.get(ticket_id=idTicket)
 
         for mensagem in mensagensTicket:
@@ -333,7 +330,6 @@ def getMensagensTicket(request, idTicket):
 
             mensagem['usuario_id'].append()
             mensagem['usuario'] = nomeUsuario
-
         return JsonResponse(mensagensTicket)
 
 def createMessage(request, idTicket):
@@ -349,7 +345,6 @@ def createMessage(request, idTicket):
             }
 
             return JsonResponse(error)
-
         message = {
             'mensagem': body['mensagem'],
             'imagem': body['imagem'],
