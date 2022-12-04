@@ -204,7 +204,9 @@ def listTicketsAnalista(request):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
 
-        analista = Analista.objects.filter(id=body['analista_id'])
+        usuario = Usuario.objects.get(id=body['usuario_id'])
+
+        analista = Analista.objects.filter(usario_id=usuario.id)
 
         q = Q()
 
