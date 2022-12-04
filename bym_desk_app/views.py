@@ -297,7 +297,14 @@ def createTicket(request):
         mensagemSerializer.is_valid(raise_exception=True)
         mensagemSerializer.save()
 
-        publish({'nome': 'Matheus Henriques', 'email': 'math.marqui@gmail.com', 'setor':'Elétrico'})
+        analistasSetor = Analista.objects.filter(setor=body['setor'])
+
+        for analista in analistasSetor:
+            analista_id = analista['usuario_id']
+            analistaInfos = Usuario.objects.filter(id=analista_id).values_list('nome', 'email')
+            
+            publish({'nome': analistaInfos['nome'], 'email': analistaInfos['email'], 'setor':body['setor']})
+
 
         return JsonResponse(ticketFormatted)
 
@@ -310,12 +317,12 @@ def getBlocoLocal(request):
         
         if bloco.exists()==False:
             error = {
-                'error': 'Solicitante não existe'
+                'error': 'Bloco não existe'
             }
 
             return JsonResponse(error)
         
-        locais_bloco = Local.objects.filter(bloco_id=body['bloco_id']).values_list('nome', flat=True)
+        locais_bloco = Local.objects.filter(bloco_id=body['bloco_id']).values_list('id', 'nome', flat=True)
         return JsonResponse(locais_bloco)
 
 def getMensagensTicket(request, idTicket):
@@ -327,7 +334,7 @@ def getMensagensTicket(request, idTicket):
 
         if ticket.exists()==False:
             error = {
-                'error': 'Solicitante não existe'
+                'error': 'Ticket não existe'
             }
 
             return JsonResponse(error)
@@ -352,7 +359,7 @@ def createMessage(request, idTicket):
 
         if ticket.exists()==False:
             error = {
-                'error': 'Solicitante não existe'
+                'error': 'Ticket não existe'
             }
 
             return JsonResponse(error)
