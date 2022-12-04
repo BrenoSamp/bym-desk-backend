@@ -177,27 +177,27 @@ def listTicketsSolicitante(request):
 
         q = Q()
 
-        if body['id']:
-            q &= Q(id=body['id'])
-        if body['setor']:
-            q &= Q(setor=body['setor'])
         q &= Q(solicitante_id=usuario.id)
-        ticket = Ticket.objects.get(q)
-        local = Local.objects.get(local_id=ticket.local_id)
-        bloco = Bloco.objects.get(id=local.bloco_id)
+        Tickets = Ticket.objects.get(q)
 
-        formattedResult = {
-            'id': ticket.id,
-            'solicitante_id': ticket.solicitante_id,
-            'analista_id': ticket.analista_id,
-            'local_id': ticket.local_id,
-            'nome_local': local.nome,
-            'bloco_id: ': local.bloco_id,
-            'nome_bloco': bloco.nome,
-            'status': ticket.status,
-            'tipo': ticket.tipo,
-            'data': ticket.data
-        }
+        formattedResult = {}
+        for ticket in Tickets:
+            local = Local.objects.get(local_id=ticket.local_id)
+            bloco = Bloco.objects.get(id=local.bloco_id)
+
+
+            formattedResult[ticket.id] = {
+                'id': ticket.id,
+                'solicitante_id': ticket.solicitante_id,
+                'analista_id': ticket.analista_id,
+                'local_id': ticket.local_id,
+                'nome_local': local.nome,
+                'bloco_id: ': local.bloco_id,
+                'nome_bloco': bloco.nome,
+                'status': ticket.status,
+                'tipo': ticket.tipo,
+                'data': ticket.data
+            }
 
         return JsonResponse(formattedResult)
 
@@ -215,15 +215,53 @@ def listTicketsAnalista(request):
 
         if analista.exists():
             analista = Analista.objects.get(id=body['analista_id'])
-            if body['id']:
-                q &= Q(id=body['id'])
-            if body['status']:
-                q &= Q(status=body['status'])
-            ticket = Ticket.objects.get(q)
+            q = Q(setor=analista.setor)
+            Tickets = Ticket.objects.get(q)
+
+            formattedResult = {}
+
+            for ticket in Tickets:
+                local = Local.objects.get(local_id=ticket.local_id)
+                bloco = Bloco.objects.get(id=local.bloco_id)
+
+
+                formattedResult[ticket.id] = {
+                    'id': ticket.id,
+                    'solicitante_id': ticket.solicitante_id,
+                    'analista_id': ticket.analista_id,
+                    'local_id': ticket.local_id,
+                    'nome_local': local.nome,
+                    'bloco_id: ': local.bloco_id,
+                    'nome_bloco': bloco.nome,
+                    'status': ticket.status,
+                    'tipo': ticket.tipo,
+                    'data': ticket.data
+                }
+
+
+            return JsonResponse(formattedResult)
+
+        error = {
+            'error': 'Analista não existe'
+        }
+
+        return JsonResponse(error)
+
+def listTicketsAdmin(request):
+    if request.method == 'GET':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        Tickets = Ticket.objects.all()
+
+        formattedResult = {}
+
+        for ticket in Tickets:
             local = Local.objects.get(local_id=ticket.local_id)
             bloco = Bloco.objects.get(id=local.bloco_id)
 
-            formattedResult = {
+
+            formattedResult[ticket.id] = {
                 'id': ticket.id,
                 'solicitante_id': ticket.solicitante_id,
                 'analista_id': ticket.analista_id,
@@ -236,13 +274,8 @@ def listTicketsAnalista(request):
                 'data': ticket.data
             }
 
-            return JsonResponse(formattedResult)
+        return JsonResponse(formattedResult)
 
-        error = {
-            'error': 'Analista não existe'
-        }
-
-        return JsonResponse(error)
 
 class MensagensViewSet(viewsets.ModelViewSet):
     queryset = Mensagem.objects.all()
