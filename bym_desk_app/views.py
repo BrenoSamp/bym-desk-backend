@@ -178,7 +178,7 @@ def listTicketsSolicitante(request):
         q = Q()
 
         q &= Q(solicitante_id=usuario.id)
-        Tickets = Ticket.objects.get(q)
+        Tickets = Ticket.objects.all().filter(q)
 
         formattedResult = {}
         for ticket in Tickets:
@@ -216,7 +216,7 @@ def listTicketsAnalista(request):
         if analista.exists():
             analista = Analista.objects.get(id=body['analista_id'])
             q = Q(setor=analista.setor)
-            Tickets = Ticket.objects.get(q)
+            Tickets = Ticket.objects.all().filter(q)
 
             formattedResult = {}
 

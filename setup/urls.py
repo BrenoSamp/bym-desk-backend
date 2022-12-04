@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from bym_desk_app.views import UsuariosViewSet, AnalistasViewSet, TicketsViewSet, ListaTicketsUsuarioViewSet, createAnalista, MensagensViewSet, ListaMensagensTicketViewSet, BlocosViewSet, LocaisViewSet, login, createUser, listTicketsAnalista, listTicketsSolicitante, MatriculasViewSet, createTicket, getBlocoLocal, getMensagensTicket, createMessage
+from bym_desk_app.views import UsuariosViewSet, AnalistasViewSet, TicketsViewSet, ListaTicketsUsuarioViewSet, createAnalista, MensagensViewSet, ListaMensagensTicketViewSet, BlocosViewSet, LocaisViewSet, login, createUser, listTicketsAnalista, listTicketsSolicitante, MatriculasViewSet, createTicket, getBlocoLocal, getMensagensTicket, createMessage, listTicketsAdmin
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -42,4 +42,5 @@ urlpatterns = [
     path('solicitante/<int:ticket_id>/mensagens', ListaMensagensTicketViewSet.as_view()),
     path('solicitante/<int:ticket_id>/mensagens', getMensagensTicket),
     path('solicitante/<int:ticket_id>/cadastrarMensagem', createMessage),
+    path('admin/tickets', listTicketsAdmin),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
