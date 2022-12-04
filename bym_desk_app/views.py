@@ -198,20 +198,15 @@ def listTicketsSolicitante(request):
 
         return JsonResponse(formattedResult)
 
-@csrf_exempt
-def criaTicket(request):
-    if request.method == 'POST':
-        publish({'nome': 'Breno', 'email': 'bsampaio8@hotmail.com', 'setor':'Frigorifico'})
-    return JsonResponse({})
-
-
 
 def listTicketsAnalista(request):
     if request.method == 'GET':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
 
-        analista = Analista.objects.filter(id=body['analista_id'])
+        usuario = Usuario.objects.get(id=body['usuario_id'])
+
+        analista = Analista.objects.filter(usario_id=usuario.id)
 
         q = Q()
 
@@ -314,7 +309,6 @@ def getBlocoLocal(request):
         body = json.loads(body_unicode)
 
         bloco = Bloco.objects.filter(id=body['bloco_id'])
-        
         if bloco.exists()==False:
             error = {
                 'error': 'Bloco não existe'
@@ -338,7 +332,6 @@ def getMensagensTicket(request, idTicket):
             }
 
             return JsonResponse(error)
-        
         mensagensTicket = Mensagem.objects.get(ticket_id=idTicket)
 
         for mensagem in mensagensTicket:
@@ -347,7 +340,6 @@ def getMensagensTicket(request, idTicket):
 
             mensagem['usuario_id'].append()
             mensagem['usuario'] = nomeUsuario
-                
         return JsonResponse(mensagensTicket)
 
 def createMessage(request, idTicket):
@@ -363,7 +355,6 @@ def createMessage(request, idTicket):
             }
 
             return JsonResponse(error)
-        
         message = {
             'mensagem': body['mensagem'],
             'imagem': body['imagem'],
