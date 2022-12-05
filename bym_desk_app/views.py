@@ -353,6 +353,7 @@ def getBlocoLocal(request):
             return JsonResponse(error)
 
         locais_bloco = Local.objects.filter(bloco_id=body['bloco_id']).values_list('id', 'nome', flat=True)
+
         return JsonResponse(locais_bloco)
 
 def getMensagensTicket(request, idTicket):
