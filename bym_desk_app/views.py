@@ -72,7 +72,7 @@ def createAnalista(request):
                 'error': 'Matricula não existe'
             }
 
-            return JsonResponse(error)
+            return JsonResponse(error, status=400)
 
         usuario = {
             'nome': body['nome'],
@@ -157,7 +157,7 @@ def login(request):
         else:
             return JsonResponse({
                 'error': 'E-mail ou senha incorreta'
-            })
+            }, status=400)
 
 def listTicketsSolicitante(request):
     if request.method == 'GET':
@@ -245,7 +245,7 @@ def listTicketsAnalista(request):
             'error': 'Analista não existe'
         }
 
-        return JsonResponse(error)
+        return JsonResponse(error, status=400)
 
 def listTicketsAdmin(request):
     if request.method == 'GET':
@@ -367,7 +367,7 @@ def getMensagensTicket(request, idTicket):
                 'error': 'Ticket não existe'
             }
 
-            return JsonResponse(error)
+            return JsonResponse(error, status=400)
         mensagensTicket = Mensagem.objects.get(ticket_id=idTicket)
 
         for mensagem in mensagensTicket:
@@ -390,7 +390,7 @@ def createMessage(request, idTicket):
                 'error': 'Ticket não existe'
             }
 
-            return JsonResponse(error)
+            return JsonResponse(error, status=400)
         message = {
             'mensagem': body['mensagem'],
             'imagem': body['imagem'],
