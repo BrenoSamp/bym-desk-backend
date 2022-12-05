@@ -137,7 +137,7 @@ def createUser(request):
 
 @csrf_exempt
 def login(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
 
