@@ -178,25 +178,25 @@ def listTicketsSolicitante(request):
         q = Q()
 
         q &= Q(solicitante_id=usuario.id)
-        Tickets = Ticket.objects.all().filter(q)
+        Tickets = Ticket.objects.all().filter(q).values()
 
         formattedResult = {}
         for ticket in Tickets:
-            local = Local.objects.get(local_id=ticket.local_id)
-            bloco = Bloco.objects.get(id=local.bloco_id)
+            local = Local.objects.get(id=ticket.get("local_id_id")).__dict__
+            bloco = Bloco.objects.get(id=local.get("bloco_id_id")).__dict__
 
 
-            formattedResult[ticket.id] = {
-                'id': ticket.id,
-                'solicitante_id': ticket.solicitante_id,
-                'analista_id': ticket.analista_id,
-                'local_id': ticket.local_id,
-                'nome_local': local.nome,
-                'bloco_id: ': local.bloco_id,
-                'nome_bloco': bloco.nome,
-                'status': ticket.status,
-                'tipo': ticket.tipo,
-                'data': ticket.data
+            formattedResult[ticket.get("local_id_id")] = {
+                'id': ticket.get("local_id_id"),
+                'solicitante_id': ticket.get("solicitante_id_id"),
+                'analista_id': ticket.get("analista_id_id"),
+                'local_id': ticket.get("local_id_id"),
+                'nome_local': local.get("nome"),
+                'bloco_id: ': local.get("bloco_id_id"),
+                'nome_bloco': bloco.get("nome"),
+                'status': ticket.get("status"),
+                'tipo': ticket.get("tipo"),
+                'data': ticket.get("data")
             }
 
         return JsonResponse(formattedResult)
@@ -216,26 +216,26 @@ def listTicketsAnalista(request):
         if analista.exists():
             analista = Analista.objects.get(id=body['analista_id'])
             q = Q(setor=analista.setor)
-            Tickets = Ticket.objects.all().filter(q)
+            Tickets = Ticket.objects.all().filter(q).values()
 
             formattedResult = {}
 
             for ticket in Tickets:
-                local = Local.objects.get(local_id=ticket.local_id)
-                bloco = Bloco.objects.get(id=local.bloco_id)
+                local = Local.objects.get(id=ticket.get("local_id_id")).__dict__
+                bloco = Bloco.objects.get(id=local.get("bloco_id_id")).__dict__
 
 
-                formattedResult[ticket.id] = {
-                    'id': ticket.id,
-                    'solicitante_id': ticket.solicitante_id,
-                    'analista_id': ticket.analista_id,
-                    'local_id': ticket.local_id,
-                    'nome_local': local.nome,
-                    'bloco_id: ': local.bloco_id,
-                    'nome_bloco': bloco.nome,
-                    'status': ticket.status,
-                    'tipo': ticket.tipo,
-                    'data': ticket.data
+                formattedResult[ticket.get("local_id_id")] = {
+                    'id': ticket.get("local_id_id"),
+                    'solicitante_id': ticket.get("solicitante_id_id"),
+                    'analista_id': ticket.get("analista_id_id"),
+                    'local_id': ticket.get("local_id_id"),
+                    'nome_local': local.get("nome"),
+                    'bloco_id: ': local.get("bloco_id_id"),
+                    'nome_bloco': bloco.get("nome"),
+                    'status': ticket.get("status"),
+                    'tipo': ticket.get("tipo"),
+                    'data': ticket.get("data")
                 }
 
 
@@ -252,26 +252,26 @@ def listTicketsAdmin(request):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
 
-        Tickets = Ticket.objects.all()
+        Tickets = Ticket.objects.all().values()
 
         formattedResult = {}
 
         for ticket in Tickets:
-            local = Local.objects.get(local_id=ticket.local_id)
-            bloco = Bloco.objects.get(id=local.bloco_id)
+            local = Local.objects.get(id=ticket.get("local_id_id")).__dict__
+            bloco = Bloco.objects.get(id=local.get("bloco_id_id")).__dict__
 
 
-            formattedResult[ticket.id] = {
-                'id': ticket.id,
-                'solicitante_id': ticket.solicitante_id,
-                'analista_id': ticket.analista_id,
-                'local_id': ticket.local_id,
-                'nome_local': local.nome,
-                'bloco_id: ': local.bloco_id,
-                'nome_bloco': bloco.nome,
-                'status': ticket.status,
-                'tipo': ticket.tipo,
-                'data': ticket.data
+            formattedResult[ticket.get("local_id_id")] = {
+                'id': ticket.get("local_id_id"),
+                'solicitante_id': ticket.get("solicitante_id_id"),
+                'analista_id': ticket.get("analista_id_id"),
+                'local_id': ticket.get("local_id_id"),
+                'nome_local': local.get("nome"),
+                'bloco_id: ': local.get("bloco_id_id"),
+                'nome_bloco': bloco.get("nome"),
+                'status': ticket.get("status"),
+                'tipo': ticket.get("tipo"),
+                'data': ticket.get("data")
             }
 
         return JsonResponse(formattedResult)
