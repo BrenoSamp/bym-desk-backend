@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'bym_desk_app',
     'django_filters',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
