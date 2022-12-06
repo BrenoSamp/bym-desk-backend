@@ -48,5 +48,5 @@ urlpatterns = [
     path('admin/check', checkAdmin),
     path('bloco/create', createBloco),
     path('local/create', createLocal),
-    path('bloco/local/create', createLocal),
+    path('bloco/local/create', createBlocoLocal)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
