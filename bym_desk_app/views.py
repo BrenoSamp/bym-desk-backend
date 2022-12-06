@@ -201,6 +201,60 @@ def listTicketsSolicitante(request):
 
         return JsonResponse(formattedResult)
 
+def vinculaAnalistaTicket(request, ticket_id):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        usuario = Usuario.objects.get(id=body['usuario_id'])
+
+        analista = Analista.objects.filter(usario_id=usuario.id)
+
+        q = Q()
+
+        if analista.exists():
+            analista = Analista.objects.get(id=body['analista_id'])
+            update = {
+                'analista_id': analista.id,
+                'status': 'Em andamento'
+            }
+            Ticket.objects.update_or_create(update, defaults={'id':ticket_id})
+
+
+            return JsonResponse({'message':'ok'})
+
+        error = {
+            'error': 'Analista não existe'
+        }
+
+        return JsonResponse(error, status=400)
+
+def atualizaStatusTicket(request, ticket_id):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        usuario = Usuario.objects.get(id=body['usuario_id'])
+
+        analista = Analista.objects.filter(usario_id=usuario.id)
+
+        q = Q()
+
+        if analista.exists():
+            update = {
+                'status': body['status']
+            }
+            Ticket.objects.update_or_create(update, defaults={'id':ticket_id})
+
+
+            return JsonResponse({'message':'ok'})
+
+        error = {
+            'error': 'Analista não existe'
+        }
+
+        return JsonResponse(error, status=400)
+
 
 def listTicketsAnalista(request):
     if request.method == 'GET':
