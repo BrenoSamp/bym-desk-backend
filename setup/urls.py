@@ -36,6 +36,7 @@ urlpatterns = [
     path('analista/tickets', listTicketsAnalista),
     path('analista/create', createAnalista),
     path('solicitante/tickets', listTicketsSolicitante),
+    path('ticket/<int:ticket_id>/vinculo', getMensagensTicket),
     path('solicitante/create', createUser),
     path('solicitante/criarTicket', createTicket),
     path('solicitante/criarTicket', getBlocoLocal),
