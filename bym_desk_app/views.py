@@ -60,6 +60,225 @@ class ListaTicketsUsuarioViewSet(generics.ListAPIView):
     serializer_class= ListaTicketsUsuarioSerializer
 
 @csrf_exempt
+def checkAdmin(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        usuario = Usuario.objects.filter(id=body['usuario_id'])
+
+        if usuario.exists() == False:
+            error = {
+                'error': 'Usuário não existe'
+            }
+
+            return JsonResponse(error, status=400)
+
+        usuario = Usuario.objects.get(id=body['usuario_id'])
+
+        if usuario.admin == None or usuario.admin == 0:
+            error = {
+                'error': 'Usuário não existe'
+            }
+
+            return JsonResponse(error, status=400)
+
+
+        userFormatted = {
+            'id': usuario.id,
+            'nome': usuario.nome,
+            'email': usuario.email,
+            'telefone': usuario.telefone,
+            'role': usuario.role,
+            "admin": usuario.admin
+        }
+
+
+
+        return JsonResponse(userFormatted)
+
+@csrf_exempt
+def createBloco(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        usuario = Usuario.objects.filter(id=body['usuario_id'])
+
+        if usuario.exists() == False:
+            error = {
+                'error': 'Usuário não existe'
+            }
+
+            return JsonResponse(error, status=400)
+
+        usuario = Usuario.objects.get(id=body['usuario_id'])
+
+        if usuario.admin == None or usuario.admin == 0:
+            error = {
+                'error': 'Usuário não existe'
+            }
+
+            return JsonResponse(error, status=400)
+
+
+        bloco = {
+            'nome': body['bloco']
+        }
+
+        blocoSerializer = BlocoSerializer(data=bloco)
+        blocoSerializer.is_valid(raise_exception=True)
+        blocoSerializer.save()
+
+        blocoFormatted = {
+            'id': blocoSerializer.data['id'],
+            'matricula': blocoSerializer.data['nome'],
+        }
+
+        return JsonResponse(blocoFormatted)
+
+
+def createBlocoLocal(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        usuario = Usuario.objects.filter(id=body['usuario_id'])
+
+        if usuario.exists() == False:
+            error = {
+                'error': 'Usuário não existe'
+            }
+
+            return JsonResponse(error, status=400)
+
+        usuario = Usuario.objects.get(id=body['usuario_id'])
+
+        if usuario.admin == None or usuario.admin == 0:
+            error = {
+                'error': 'Usuário não existe'
+            }
+
+            return JsonResponse(error, status=400)
+
+        bloco = {
+            'nome': body['bloco']
+        }
+
+        blocoSerializer = BlocoSerializer(data=bloco)
+        blocoSerializer.is_valid(raise_exception=True)
+        blocoSerializer.save()
+
+
+        local = {
+            'bloco_id': blocoSerializer.data['id'],
+            'nome': body['nome']
+        }
+
+        localSerializer = LocalSerializer(data=local)
+        localSerializer.is_valid(raise_exception=True)
+        localSerializer.save()
+
+        blocoFormatted = {
+            'local_id': localSerializer.data['id'],
+            'nome_local': localSerializer.data['nome'],
+            'bloco_id': blocoSerializer.data['id'],
+            'nome_bloco': blocoSerializer.data['nome'],
+        }
+
+        return JsonResponse(blocoFormatted)
+
+def createLocal(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        usuario = Usuario.objects.filter(id=body['usuario_id'])
+
+        if usuario.exists() == False:
+            error = {
+                'error': 'Usuário não existe'
+            }
+
+            return JsonResponse(error, status=400)
+
+        usuario = Usuario.objects.get(id=body['usuario_id'])
+
+        if usuario.admin == None or usuario.admin == 0:
+            error = {
+                'error': 'Usuário não existe'
+            }
+
+            return JsonResponse(error, status=400)
+
+        bloco = Bloco.objects.filter(id=body['bloco_id'])
+
+        if bloco.exists == False:
+            error = {
+                'error': 'Bloco não existe'
+            }
+
+            return JsonResponse(error, status=400)
+
+
+        local = {
+            'bloco_id': body['bloco_id'],
+            'nome': body['nome']
+        }
+
+        localSerializer = LocalSerializer(data=local)
+        localSerializer.is_valid(raise_exception=True)
+        localSerializer.save()
+
+        blocoFormatted = {
+            'id': localSerializer.data['id'],
+            'nome': localSerializer.data['nome'],
+            'bloco_id': localSerializer.data['bloco_id'],
+        }
+
+        return JsonResponse(blocoFormatted)
+
+@csrf_exempt
+def createMatricula(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        usuario = Usuario.objects.filter(id=body['usuario_id'])
+
+        if usuario.exists() == False:
+            error = {
+                'error': 'Usuário não existe'
+            }
+
+            return JsonResponse(error, status=400)
+
+        usuario = Usuario.objects.get(id=body['usuario_id'])
+
+        if usuario.admin == None or usuario.admin == 0:
+            error = {
+                'error': 'Usuário não existe'
+            }
+
+            return JsonResponse(error, status=400)
+
+        matricula = {
+            'matricula': body['matricula']
+        }
+
+
+        matriculaSerializer = MatriculaSerializer(data=matricula)
+        matriculaSerializer.is_valid(raise_exception=True)
+        matriculaSerializer.save()
+
+        matriculaFormatted = {
+            'id': matriculaSerializer.data['id'],
+            'matricula': matriculaSerializer.data['matricula'],
+        }
+
+        return JsonResponse(matriculaFormatted)
+
+@csrf_exempt
 def createAnalista(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
@@ -129,7 +348,8 @@ def createUser(request):
             'nome': body['nome'],
             'email': body['email'],
             'telefone': body['telefone'],
-            'role': body['role']
+            'role': body['role'],
+            "admin": userSerializer.data['admin']
         }
 
         return JsonResponse(userFormatted)
