@@ -76,7 +76,7 @@ def checkAdmin(request):
 
         usuario = Usuario.objects.get(id=body['usuario_id'])
 
-        if usuario.admin == None or usuario.admin == 0:
+        if usuario.admin == None or usuario.admin == 0  or usuario.admin == False:
             error = {
                 'error': 'Usuário não existe'
             }
@@ -92,8 +92,6 @@ def checkAdmin(request):
             'role': usuario.role,
             "admin": usuario.admin
         }
-
-
 
         return JsonResponse(userFormatted)
 
