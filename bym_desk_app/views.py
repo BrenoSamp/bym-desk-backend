@@ -4,6 +4,7 @@ from rest_framework import viewsets, generics, filters
 from bym_desk_app.models import Usuario, Analista, Ticket, Mensagem, Bloco, Local, Matricula
 from bym_desk_app.serializer import UsuarioSerializer, AnalistaSerializer, TicketSerializer, ListaTicketsUsuarioSerializer, MensagemSerializer, ListaMensagensTicketSerializer, BlocoSerializer, LocalSerializer, MatriculaSerializer
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.exceptions import NotFound
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from collections import defaultdict
@@ -68,11 +69,7 @@ def checkAdmin(request):
         usuario = Usuario.objects.filter(id=body['usuario_id'])
 
         if usuario.exists() == False:
-            error = {
-                'error': 'Usuário não existe'
-            }
-
-            return JsonResponse(error, status=400)
+            raise NotFound('Usuário não existe')
 
         usuario = Usuario.objects.get(id=body['usuario_id'])
 
@@ -481,13 +478,13 @@ def listTicketsAnalista(request):
 
         usuario = Usuario.objects.get(id=body['usuario_id'])
 
-        analista = Analista.objects.filter(usario_id=usuario.id)
+        analista = Analista.objects.filter(usuario_id=usuario.id)
 
         q = Q()
 
         if analista.exists():
-            analista = Analista.objects.get(id=body['analista_id'])
-            q = Q(setor=analista.setor)
+            analista = Analista.objects.get(usuario_id=usuario.id)
+            q = Q(tipo=analista.setor)
             Tickets = Ticket.objects.all().filter(q).values()
 
             formattedResult = {}
@@ -511,6 +508,7 @@ def listTicketsAnalista(request):
                 }
 
 
+
             return JsonResponse(formattedResult)
 
         error = {
@@ -522,13 +520,12 @@ def listTicketsAnalista(request):
 def listTicketsAdmin(request):
     if request.method == 'GET':
         body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
 
-        Tickets = Ticket.objects.all().values()
+        tickets = Ticket.objects.all().values()
 
         formattedResult = {}
 
-        for ticket in Tickets:
+        for ticket in tickets:
             local = Local.objects.get(id=ticket.get("local_id_id")).__dict__
             bloco = Bloco.objects.get(id=local.get("bloco_id_id")).__dict__
 
