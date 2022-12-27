@@ -10,6 +10,8 @@ from django.db.models import Q
 from collections import defaultdict
 import json
 from bym_desk_app.producer import publish
+import array
+import numpy
 
 class UsuariosViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
@@ -395,13 +397,13 @@ def listTicketsSolicitante(request):
         q &= Q(solicitante_id=usuario.id)
         Tickets = Ticket.objects.all().filter(q).values()
 
-        formattedResult = {}
+        formattedTickets = []
         for ticket in Tickets:
             local = Local.objects.get(id=ticket.get("local_id_id")).__dict__
             bloco = Bloco.objects.get(id=local.get("bloco_id_id")).__dict__
 
 
-            formattedResult[ticket.get("local_id_id")] = {
+            formattedResult = {
                 'id': ticket.get("local_id_id"),
                 'solicitante_id': ticket.get("solicitante_id_id"),
                 'analista_id': ticket.get("analista_id_id"),
@@ -414,7 +416,9 @@ def listTicketsSolicitante(request):
                 'data': ticket.get("data")
             }
 
-        return JsonResponse(formattedResult)
+            formattedTickets.append(formattedResult)
+
+        return JsonResponse(json.loads(json.dumps(formattedResult)), safe=False)
 
 def vinculaAnalistaTicket(request, ticket_id):
     if request.method == 'POST':
@@ -487,14 +491,14 @@ def listTicketsAnalista(request):
             q = Q(tipo=analista.setor)
             Tickets = Ticket.objects.all().filter(q).values()
 
-            formattedResult = {}
+            formattedTickets = []
 
             for ticket in Tickets:
                 local = Local.objects.get(id=ticket.get("local_id_id")).__dict__
                 bloco = Bloco.objects.get(id=local.get("bloco_id_id")).__dict__
 
 
-                formattedResult[ticket.get("local_id_id")] = {
+                formattedResult = {
                     'id': ticket.get("local_id_id"),
                     'solicitante_id': ticket.get("solicitante_id_id"),
                     'analista_id': ticket.get("analista_id_id"),
@@ -507,9 +511,9 @@ def listTicketsAnalista(request):
                     'data': ticket.get("data")
                 }
 
+                formattedTickets.append(formattedResult)
 
-
-            return JsonResponse(formattedResult)
+            return JsonResponse(json.loads(json.dumps(formattedResult)), safe=False)
 
         error = {
             'error': 'Analista não existe'
@@ -517,20 +521,21 @@ def listTicketsAnalista(request):
 
         return JsonResponse(error, status=400)
 
+@csrf_exempt
 def listTicketsAdmin(request):
     if request.method == 'GET':
         body_unicode = request.body.decode('utf-8')
 
         tickets = Ticket.objects.all().values()
 
-        formattedResult = {}
+        formattedResult =  []
 
         for ticket in tickets:
             local = Local.objects.get(id=ticket.get("local_id_id")).__dict__
             bloco = Bloco.objects.get(id=local.get("bloco_id_id")).__dict__
 
 
-            formattedResult[ticket.get("local_id_id")] = {
+            formattedTicket = {
                 'id': ticket.get("local_id_id"),
                 'solicitante_id': ticket.get("solicitante_id_id"),
                 'analista_id': ticket.get("analista_id_id"),
@@ -543,7 +548,9 @@ def listTicketsAdmin(request):
                 'data': ticket.get("data")
             }
 
-        return JsonResponse(formattedResult)
+            formattedResult.append(formattedTicket)
+
+        return JsonResponse(json.loads(json.dumps(formattedResult)), safe=False)
 
 
 class MensagensViewSet(viewsets.ModelViewSet):
@@ -558,6 +565,14 @@ class ListaMensagensTicketViewSet(generics.ListAPIView):
         queryset = Ticket.objects.filter(ticket_id=self.kwargs['ticket_id'])
         return queryset
     serializer_class= ListaMensagensTicketSerializer
+
+@csrf_exempt
+def testPublish(request):
+    if request.method == 'POST':
+        publish({'nome': 'Breno', 'email': 'bsampaio8@hotmail.com', 'setor':'PCC'})
+
+
+    return JsonResponse({'POSTADO': True})
 
 def createTicket(request):
     if request.method == 'POST':

@@ -1,8 +1,15 @@
 FROM python:3.9
-ENV PYTHONUNBUFFERED 1
-WORKDIR /app
-COPY requirements.txt /app/requirements.txt
-RUN pip install -r requirements.txt
-COPY . /app
+LABEL maintainer='Brenim'
 
-EXPOSE 8000
+ENV PYTHONUNBUFFERED 1
+
+COPY requirements.txt /app/requirements.txt
+COPY . /app
+WORKDIR /app
+
+RUN python -m venv /py && \
+    /py/bin/pip install -r requirements.txt
+
+ENV PATH="/py/bin:$PATH"
+
+# EXPOSE 8000
