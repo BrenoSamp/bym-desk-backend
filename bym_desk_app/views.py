@@ -377,7 +377,7 @@ def login(request):
             }, status=400)
 
 def listTicketsSolicitante(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
 
@@ -476,7 +476,7 @@ def atualizaStatusTicket(request, ticket_id):
 
 
 def listTicketsAnalista(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
 
@@ -521,7 +521,6 @@ def listTicketsAnalista(request):
 
         return JsonResponse(error, status=400)
 
-@csrf_exempt
 def listTicketsAdmin(request):
     if request.method == 'GET':
         body_unicode = request.body.decode('utf-8')
