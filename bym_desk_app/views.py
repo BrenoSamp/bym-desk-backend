@@ -404,7 +404,7 @@ def listTicketsSolicitante(request):
 
 
             formattedResult = {
-                'id': ticket.get("local_id_id"),
+                'id': ticket.get("id"),
                 'solicitante_id': ticket.get("solicitante_id_id"),
                 'analista_id': ticket.get("analista_id_id"),
                 'local_id': ticket.get("local_id_id"),
@@ -499,7 +499,7 @@ def listTicketsAnalista(request):
 
 
                 formattedResult = {
-                    'id': ticket.get("local_id_id"),
+                    'id': ticket.get("id"),
                     'solicitante_id': ticket.get("solicitante_id_id"),
                     'analista_id': ticket.get("analista_id_id"),
                     'local_id': ticket.get("local_id_id"),
@@ -536,7 +536,7 @@ def listTicketsAdmin(request):
 
 
             formattedTicket = {
-                'id': ticket.get("local_id_id"),
+                'id': ticket.get("id"),
                 'solicitante_id': ticket.get("solicitante_id_id"),
                 'analista_id': ticket.get("analista_id_id"),
                 'local_id': ticket.get("local_id_id"),
