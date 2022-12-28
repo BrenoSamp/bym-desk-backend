@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   gcloud:
-    image: google/cloud-sdk:338.0.0
+    image: google/cloud-sdk:latest
     volumes:
       - gcp-creds:/creds
       - .:/app
