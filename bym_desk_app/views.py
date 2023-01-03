@@ -401,10 +401,12 @@ def listTicketsSolicitante(request):
         for ticket in Tickets:
             local = Local.objects.get(id=ticket.get("local_id_id")).__dict__
             bloco = Bloco.objects.get(id=local.get("bloco_id_id")).__dict__
+            solicitante = Usuario.objects.get(id=ticket.get("solicitante_id_id"))
 
 
             formattedResult = {
                 'id': ticket.get("id"),
+                'nome_solicitante': solicitante.nome,
                 'solicitante_id': ticket.get("solicitante_id_id"),
                 'analista_id': ticket.get("analista_id_id"),
                 'local_id': ticket.get("local_id_id"),
@@ -449,7 +451,7 @@ def vinculaAnalistaTicket(request, ticket_id):
         return JsonResponse(error, status=400)
 
 def atualizaStatusTicket(request, ticket_id):
-    if request.method == 'POST':
+    if request.method == 'PUT':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
 
@@ -496,11 +498,13 @@ def listTicketsAnalista(request):
             for ticket in Tickets:
                 local = Local.objects.get(id=ticket.get("local_id_id")).__dict__
                 bloco = Bloco.objects.get(id=local.get("bloco_id_id")).__dict__
+                solicitante = Usuario.objects.get(id=ticket.get("solicitante_id_id"))
 
 
                 formattedResult = {
                     'id': ticket.get("id"),
                     'solicitante_id': ticket.get("solicitante_id_id"),
+                    'nome_solicitante': solicitante.nome,
                     'analista_id': ticket.get("analista_id_id"),
                     'local_id': ticket.get("local_id_id"),
                     'nome_local': local.get("nome"),
@@ -532,11 +536,13 @@ def listTicketsAdmin(request):
         for ticket in tickets:
             local = Local.objects.get(id=ticket.get("local_id_id")).__dict__
             bloco = Bloco.objects.get(id=local.get("bloco_id_id")).__dict__
+            solicitante = Usuario.objects.get(id=ticket.get("solicitante_id_id"))
 
 
             formattedTicket = {
                 'id': ticket.get("id"),
                 'solicitante_id': ticket.get("solicitante_id_id"),
+                'nome_solicitante': solicitante.nome,
                 'analista_id': ticket.get("analista_id_id"),
                 'local_id': ticket.get("local_id_id"),
                 'nome_local': local.get("nome"),
