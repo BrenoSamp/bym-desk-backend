@@ -462,11 +462,11 @@ def atualizaStatusTicket(request, ticket_id):
         q = Q()
 
         if analista.exists():
-            update = {
-                'status': body['status']
-            }
-            Ticket.objects.update_or_create(update, defaults={'id':ticket_id})
-
+            analista = Analista.objects.get(id=body['analista_id'])
+            ticket = Ticket.objects.get(id=ticket_id)
+            ticket.status = body['status']
+            ticket.analista_id = analista
+            ticket.save()
 
             return JsonResponse({'message':'ok'})
 
