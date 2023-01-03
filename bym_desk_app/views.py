@@ -429,7 +429,7 @@ def vinculaAnalistaTicket(request, ticket_id):
 
         usuario = Usuario.objects.get(id=body['usuario_id'])
 
-        analista = Analista.objects.filter(usario_id=usuario.id)
+        analista = Analista.objects.filter(usuario_id=usuario.id)
 
         q = Q()
 
