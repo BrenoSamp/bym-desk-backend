@@ -403,11 +403,17 @@ def listTicketsSolicitante(request):
             bloco = Bloco.objects.get(id=local.get("bloco_id_id")).__dict__
             solicitante = Usuario.objects.get(id=ticket.get("solicitante_id_id"))
 
+            matricula = ''
+            if ticket.get("analista_id_id") is not None:
+                analista = Analista.objects.get(id=ticket.get("analista_id_id"))
+                matricula = analista.matricula
+
 
             formattedResult = {
                 'id': ticket.get("id"),
                 'nome_solicitante': solicitante.nome,
                 'solicitante_id': ticket.get("solicitante_id_id"),
+                'matricula_analista': matricula,
                 'analista_id': ticket.get("analista_id_id"),
                 'local_id': ticket.get("local_id_id"),
                 'nome_local': local.get("nome"),
@@ -500,11 +506,16 @@ def listTicketsAnalista(request):
                 bloco = Bloco.objects.get(id=local.get("bloco_id_id")).__dict__
                 solicitante = Usuario.objects.get(id=ticket.get("solicitante_id_id"))
 
+                matricula = ''
+                if ticket.get("analista_id_id") is not None:
+                    analista = Analista.objects.get(id=ticket.get("analista_id_id"))
+                    matricula = analista.matricula
 
                 formattedResult = {
                     'id': ticket.get("id"),
                     'solicitante_id': ticket.get("solicitante_id_id"),
                     'nome_solicitante': solicitante.nome,
+                    'matricula_analista': matricula,
                     'analista_id': ticket.get("analista_id_id"),
                     'local_id': ticket.get("local_id_id"),
                     'nome_local': local.get("nome"),
@@ -538,11 +549,16 @@ def listTicketsAdmin(request):
             bloco = Bloco.objects.get(id=local.get("bloco_id_id")).__dict__
             solicitante = Usuario.objects.get(id=ticket.get("solicitante_id_id"))
 
+            matricula = ''
+            if ticket.get("analista_id_id") is not None:
+                analista = Analista.objects.get(id=ticket.get("analista_id_id"))
+                matricula = analista.matricula
 
             formattedTicket = {
                 'id': ticket.get("id"),
                 'solicitante_id': ticket.get("solicitante_id_id"),
                 'nome_solicitante': solicitante.nome,
+                'matricula_analista': matricula,
                 'analista_id': ticket.get("analista_id_id"),
                 'local_id': ticket.get("local_id_id"),
                 'nome_local': local.get("nome"),
