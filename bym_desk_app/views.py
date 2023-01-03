@@ -411,7 +411,7 @@ def listTicketsSolicitante(request):
                 'analista_id': ticket.get("analista_id_id"),
                 'local_id': ticket.get("local_id_id"),
                 'nome_local': local.get("nome"),
-                'bloco_id: ': local.get("bloco_id_id"),
+                'bloco_id': local.get("bloco_id_id"),
                 'nome_bloco': bloco.get("nome"),
                 'status': ticket.get("status"),
                 'tipo': ticket.get("tipo"),
@@ -422,8 +422,9 @@ def listTicketsSolicitante(request):
 
         return JsonResponse(json.loads(json.dumps(formattedResult)), safe=False)
 
+@csrf_exempt
 def vinculaAnalistaTicket(request, ticket_id):
-    if request.method == 'POST':
+    if request.method == 'PUT':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
 
@@ -507,7 +508,7 @@ def listTicketsAnalista(request):
                     'analista_id': ticket.get("analista_id_id"),
                     'local_id': ticket.get("local_id_id"),
                     'nome_local': local.get("nome"),
-                    'bloco_id: ': local.get("bloco_id_id"),
+                    'bloco_id': local.get("bloco_id_id"),
                     'nome_bloco': bloco.get("nome"),
                     'status': ticket.get("status"),
                     'tipo': ticket.get("tipo"),
@@ -545,7 +546,7 @@ def listTicketsAdmin(request):
                 'analista_id': ticket.get("analista_id_id"),
                 'local_id': ticket.get("local_id_id"),
                 'nome_local': local.get("nome"),
-                'bloco_id: ': local.get("bloco_id_id"),
+                'bloco_id': local.get("bloco_id_id"),
                 'nome_bloco': bloco.get("nome"),
                 'status': ticket.get("status"),
                 'tipo': ticket.get("tipo"),
