@@ -450,14 +450,13 @@ def vinculaAnalistaTicket(request, ticket_id):
 
         return JsonResponse(error, status=400)
 
+@csrf_exempt
 def atualizaStatusTicket(request, ticket_id):
     if request.method == 'PUT':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
 
-        usuario = Usuario.objects.get(id=body['usuario_id'])
-
-        analista = Analista.objects.filter(usario_id=usuario.id)
+        analista = Analista.objects.filter(id=body['analista_id'])
 
         q = Q()
 
