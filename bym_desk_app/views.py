@@ -134,7 +134,7 @@ def createBloco(request):
 
         return JsonResponse(blocoFormatted)
 
-
+@csrf_exempt
 def createBlocoLocal(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
@@ -375,7 +375,7 @@ def login(request):
             return JsonResponse({
                 'error': 'E-mail ou senha incorreta'
             }, status=400)
-
+@csrf_exempt
 def listTicketsSolicitante(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
@@ -482,7 +482,7 @@ def atualizaStatusTicket(request, ticket_id):
 
         return JsonResponse(error, status=400)
 
-
+@csrf_exempt
 def listTicketsAnalista(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
@@ -536,6 +536,7 @@ def listTicketsAnalista(request):
 
         return JsonResponse(error, status=400)
 
+@csrf_exempt
 def listTicketsAdmin(request):
     if request.method == 'GET':
         body_unicode = request.body.decode('utf-8')
@@ -595,6 +596,7 @@ def testPublish(request):
 
     return JsonResponse({'POSTADO': True})
 
+@csrf_exempt
 def createTicket(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
@@ -604,9 +606,9 @@ def createTicket(request):
         ticket = {
             'solicitante_id': body['solicitante_id'],
             'tipo': body['tipo'],
-            'local_id': body['local'],
-            'status': 'em espera',
-            'data': current_date
+            'local_id': body['local_id'],
+            'status': body['status'],
+            'data': current_date.strftime("%d/%m/%Y, %H:%M")
         }
 
         ticketSerializer = TicketSerializer(data=ticket)
@@ -617,9 +619,9 @@ def createTicket(request):
             'id': ticketSerializer.data['id'],
             'solicitante_id': body['solicitante_id'],
             'tipo': body['tipo'],
-            'local_id': body['local'],
-            'status': 'em espera',
-            'data': current_date
+            'local_id': body['local_id'],
+            'status': body['status'],
+            'data': current_date.strftime("%d/%m/%Y, %H:%M")
         }
 
         mensagem = {
@@ -633,17 +635,18 @@ def createTicket(request):
         mensagemSerializer.is_valid(raise_exception=True)
         mensagemSerializer.save()
 
-        analistasSetor = Analista.objects.filter(setor=body['setor'])
+        analistasSetor = Analista.objects.filter(setor=body['tipo'])
 
         for analista in analistasSetor:
             analista_id = analista['usuario_id']
             analistaInfos = Usuario.objects.filter(id=analista_id).values_list('nome', 'email')
 
-            publish({'nome': analistaInfos['nome'], 'email': analistaInfos['email'], 'setor':body['setor']})
+            publish({'nome': analistaInfos['nome'], 'email': analistaInfos['email'], 'setor':body['tipo']})
 
 
         return JsonResponse(ticketFormatted)
 
+@csrf_exempt
 def getBlocoLocal(request):
     if request.method == 'GET':
         body_unicode = request.body.decode('utf-8')
@@ -661,6 +664,7 @@ def getBlocoLocal(request):
 
         return JsonResponse(locais_bloco)
 
+@csrf_exempt
 def getMensagensTicket(request, idTicket):
     if request.method == 'GET':
         body_unicode = request.body.decode('utf-8')
@@ -684,6 +688,7 @@ def getMensagensTicket(request, idTicket):
             mensagem['usuario'] = nomeUsuario
         return JsonResponse(mensagensTicket)
 
+@csrf_exempt
 def createMessage(request, idTicket):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
