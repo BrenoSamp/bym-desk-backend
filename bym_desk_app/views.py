@@ -580,7 +580,7 @@ class MensagensViewSet(viewsets.ModelViewSet):
     serializer_class = MensagemSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['id']
-    filterset_fields = ['id', 'ticket_id', 'mensagem', 'imagem']
+    filterset_fields = ['id', 'ticket_id', 'mensagem']
 
 class ListaMensagensTicketViewSet(generics.ListAPIView):
     def get_queryset(self):
