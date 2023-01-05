@@ -8,4 +8,3 @@ def publish(body):
     channel = connection.channel()
     channel.basic_publish(exchange='', routing_key='novo_ticket_setor', body=json.dumps(body))
     connection.close()
-
