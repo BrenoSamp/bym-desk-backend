@@ -4,3 +4,5 @@ entrypoint: gunicorn -b :$PORT --chdir ./ setup.wsgi:application
 handlers:
   - url: /.*
     script: auto
+  - url: /static
+    static_dir: static/

@@ -368,8 +368,16 @@ def login(request):
                 'email': usuario.email,
                 'telefone': usuario.telefone,
                 'role': usuario.role,
-                'admin': usuario.admin
+                'admin': usuario.admin,
+                'setor': None
             }
+
+            analista = Analista.objects.filter(usuario_id=usuario.id)
+
+            if analista.exists():
+                analista = Analista.objects.get(usuario_id=usuario.id)
+                serializedUser['setor'] = analista.setor
+
             return JsonResponse(serializedUser)
         else:
             return JsonResponse({

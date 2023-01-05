@@ -9,6 +9,8 @@ services:
     working_dir: /app
     environment:
       - CLOUDSDK_CONFIG=/creds
+      - GOOGLE_APLICATION_CREDENTIALS=/credentials/bym-backend-2350f39257af.json
+
 
 volumes:
   gcp-creds:

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+from google.oauth2 import service_account
 import os
 from pathlib import Path
 
@@ -33,6 +33,10 @@ CORS_ALLOW_CREDENTIALS = True
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media_root')
 MEDIA_URL = '/media/'
+
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    "./credentials/bym-backend-2350f39257af.json"
+)
 
 # Application definition
 
@@ -137,3 +141,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Descomentar so no deploy
+# DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+# GS_BUCKET_NAME = 'bym-imagens'
+# STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
