@@ -599,15 +599,20 @@ def testPublish(request):
 @csrf_exempt
 def createTicket(request):
     if request.method == 'POST':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
+        data = request.POST.dict()
+        solicitanteId = data.get("solicitante_id")
+        tipo = data.get("tipo")
+        localId = data.get("local_id")
+        status = data.get("status")
+        descricao = data.get("descricao")
+        imagem = request.FILES['imagem']
         current_date = datetime.date.today()
 
         ticket = {
-            'solicitante_id': body['solicitante_id'],
-            'tipo': body['tipo'],
-            'local_id': body['local_id'],
-            'status': body['status'],
+            'solicitante_id': solicitanteId,
+            'tipo': tipo,
+            'local_id': localId,
+            'status': status,
             'data': current_date.strftime("%d/%m/%Y, %H:%M")
         }
 
@@ -617,31 +622,31 @@ def createTicket(request):
 
         ticketFormatted = {
             'id': ticketSerializer.data['id'],
-            'solicitante_id': body['solicitante_id'],
-            'tipo': body['tipo'],
-            'local_id': body['local_id'],
-            'status': body['status'],
-            'data': current_date.strftime("%d/%m/%Y, %H:%M")
+            'solicitante_id': solicitanteId,
+            'tipo': tipo,
+            'local_id': localId,
+            'status': status,
+            'data': current_date.strftime("%d/%m/%Y %H:%M:%S")
         }
 
         mensagem = {
             'ticket_id': ticketFormatted['id'],
-            'imagem':body['imagem'],
-            'mensagem': body['descricao'],
-            'usuario_id': body['solicitante_id']
+            'imagem': imagem,
+            'mensagem': descricao,
+            'usuario_id': solicitanteId
         }
 
         mensagemSerializer = MensagemSerializer(data=mensagem)
         mensagemSerializer.is_valid(raise_exception=True)
         mensagemSerializer.save()
 
-        analistasSetor = Analista.objects.filter(setor=body['tipo'])
+        analistasSetor = Analista.objects.filter(setor=tipo)
 
         for analista in analistasSetor:
             analista_id = analista['usuario_id']
             analistaInfos = Usuario.objects.filter(id=analista_id).values_list('nome', 'email')
 
-            publish({'nome': analistaInfos['nome'], 'email': analistaInfos['email'], 'setor':body['tipo']})
+            publish({'nome': analistaInfos['nome'], 'email': analistaInfos['email'], 'setor':'tipo'})
 
 
         return JsonResponse(ticketFormatted)
