@@ -621,7 +621,7 @@ def createTicket(request):
             'tipo': tipo,
             'local_id': localId,
             'status': status,
-            'data': current_date.strftime("%d/%m/%Y, %H:%M")
+            'data': current_date.strftime("%d/%m/%Y %H:%M:%S")
         }
 
         ticketSerializer = TicketSerializer(data=ticket)
@@ -634,7 +634,8 @@ def createTicket(request):
             'tipo': tipo,
             'local_id': localId,
             'status': status,
-            'data': current_date.strftime("%d/%m/%Y %H:%M:%S")
+            'data': current_date.strftime("%d/%m/%Y %H:%M:%S"),
+            'descricao': descricao
         }
 
         mensagem = {

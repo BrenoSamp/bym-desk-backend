@@ -100,6 +100,16 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'bymdb',
+#         'USER': 'appuser',
+#         'PASSWORD': 'appuser1',
+#         'HOST': '/cloudsql/bym-backend:southamerica-west1:bymdb',
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
