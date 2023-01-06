@@ -649,13 +649,13 @@ def createTicket(request):
         mensagemSerializer.is_valid(raise_exception=True)
         mensagemSerializer.save()
 
-        analistasSetor = Analista.objects.filter(setor=tipo)
+        analistasSetor = Analista.objects.filter(setor=tipo).values()
 
         for analista in analistasSetor:
-            analista_id = analista.usuario_id
-            analistaInfos = Usuario.objects.filter(id=analista_id).values_list('nome', 'email')
+            analista_id = analista.get("usuario_id_id")
+            analistaInfos = Usuario.objects.get(id=analista_id)
 
-            publish({'nome': analistaInfos['nome'], 'email': analistaInfos['email'], 'setor':'tipo'})
+            publish({'nome': analistaInfos.nome, 'email': analistaInfos.email, 'setor':tipo})
 
 
         return JsonResponse(ticketFormatted)
@@ -679,12 +679,10 @@ def getBlocoLocal(request):
         return JsonResponse(locais_bloco)
 
 @csrf_exempt
-def getMensagensTicket(request, idTicket):
+def getMensagensTicket(request, ticket_id):
     if request.method == 'GET':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
 
-        ticket = Ticket.objects.filter(id=idTicket)
+        ticket = Ticket.objects.filter(id=ticket_id)
 
         if ticket.exists()==False:
             error = {
@@ -692,15 +690,28 @@ def getMensagensTicket(request, idTicket):
             }
 
             return JsonResponse(error, status=400)
-        mensagensTicket = Mensagem.objects.get(ticket_id=idTicket)
+        mensagensTicket = Mensagem.objects.filter(ticket_id=ticket_id).values()
+
+        mensagens = []
 
         for mensagem in mensagensTicket:
-            usuarioRemetente = mensagem['usuario_id']
-            nomeUsuario = Usuario.objects.filter(id=usuarioRemetente).values('nome')
+            usuarioRemetente = mensagem.get("usuario_id_id")
+            usuario = Usuario.objects.get(id=usuarioRemetente)
+            ticket = Ticket.objects.get(id=ticket_id)
 
-            mensagem['usuario_id'].append()
-            mensagem['usuario'] = nomeUsuario
-        return JsonResponse(mensagensTicket)
+
+            mensagem = {
+                'id': mensagem.get("id"),
+                'usuario_id': mensagem.get("usuario_id_id"),
+                'nome_usuario': usuario.nome,
+                'mensagem': mensagem.get("mensagem"),
+                'imagem': mensagem.get("imagem"),
+                'data': ticket.data
+            }
+
+            mensagens.append(mensagem)
+
+        return JsonResponse(json.loads(json.dumps(mensagens)), safe=False)
 
 @csrf_exempt
 def createMessage(request, idTicket):
