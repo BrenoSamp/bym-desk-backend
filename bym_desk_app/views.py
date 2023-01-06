@@ -652,7 +652,7 @@ def createTicket(request):
         analistasSetor = Analista.objects.filter(setor=tipo)
 
         for analista in analistasSetor:
-            analista_id = analista['usuario_id']
+            analista_id = analista.usuario_id
             analistaInfos = Usuario.objects.filter(id=analista_id).values_list('nome', 'email')
 
             publish({'nome': analistaInfos['nome'], 'email': analistaInfos['email'], 'setor':'tipo'})
